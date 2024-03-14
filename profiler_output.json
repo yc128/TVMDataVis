@@ -1,0 +1,217 @@
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "327417300",
+        "COPY_OUT_TIME": "62912",
+        "TOTAL_GRAAL_COMPILE_TIME": "95410700",
+        "TOTAL_CODE_GENERATION_TIME": "11310800",
+        "TOTAL_DISPATCH_KERNEL_TIME": "95744",
+        "TOTAL_BYTE_CODE_GENERATION": "8351400",
+        "TOTAL_KERNEL_TIME": "10272",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "971328",
+        "COPY_IN_TIME": "130016",
+        "TOTAL_DRIVER_COMPILE_TIME": "86298200",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "10272",
+            "TASK_CODE_GENERATION_TIME": "11310800",
+            "TASK_COMPILE_DRIVER_TIME": "86298200",
+            "TASK_COMPILE_GRAAL_TIME": "95410700"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1051400",
+        "COPY_OUT_TIME": "61952",
+        "TOTAL_DISPATCH_KERNEL_TIME": "50464",
+        "TOTAL_KERNEL_TIME": "8832",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "370112",
+        "COPY_IN_TIME": "128992",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "8832"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1049599",
+        "COPY_OUT_TIME": "62048",
+        "TOTAL_DISPATCH_KERNEL_TIME": "50368",
+        "TOTAL_KERNEL_TIME": "10144",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "366688",
+        "COPY_IN_TIME": "127584",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "10144"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "895400",
+        "COPY_OUT_TIME": "61888",
+        "TOTAL_DISPATCH_KERNEL_TIME": "61184",
+        "TOTAL_KERNEL_TIME": "8704",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "268224",
+        "COPY_IN_TIME": "128736",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "8704"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1100700",
+        "COPY_OUT_TIME": "63424",
+        "TOTAL_DISPATCH_KERNEL_TIME": "85248",
+        "TOTAL_KERNEL_TIME": "9920",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "325280",
+        "COPY_IN_TIME": "128768",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "9920"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1098000",
+        "COPY_OUT_TIME": "61920",
+        "TOTAL_DISPATCH_KERNEL_TIME": "64736",
+        "TOTAL_KERNEL_TIME": "9920",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "378912",
+        "COPY_IN_TIME": "127552",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "9920"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1208899",
+        "COPY_OUT_TIME": "61344",
+        "TOTAL_DISPATCH_KERNEL_TIME": "71456",
+        "TOTAL_KERNEL_TIME": "8832",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "380928",
+        "COPY_IN_TIME": "127648",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "8832"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1541100",
+        "COPY_OUT_TIME": "61312",
+        "TOTAL_DISPATCH_KERNEL_TIME": "76000",
+        "TOTAL_KERNEL_TIME": "8992",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "611200",
+        "COPY_IN_TIME": "132480",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "8992"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1599499",
+        "COPY_OUT_TIME": "61440",
+        "TOTAL_DISPATCH_KERNEL_TIME": "58688",
+        "TOTAL_KERNEL_TIME": "16960",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "436800",
+        "COPY_IN_TIME": "127712",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "16960"
+        }
+    }
+}
+
+{
+    "s0": {
+        "TOTAL_TASK_GRAPH_TIME": "1181900",
+        "COPY_OUT_TIME": "61952",
+        "TOTAL_DISPATCH_KERNEL_TIME": "53408",
+        "TOTAL_KERNEL_TIME": "9728",
+        "TOTAL_DISPATCH_DATA_TRANSFERS_TIME": "429376",
+        "COPY_IN_TIME": "128448",
+        "TOTAL_COPY_OUT_SIZE_BYTES": "400024",
+        "TOTAL_COPY_IN_SIZE_BYTES": "800048",
+        "s0.t0": {
+            "BACKEND": "OPENCL",
+            "METHOD": "VectorAddInt.vectorAdd",
+            "DEVICE_ID": "0:0",
+            "DEVICE": "NVIDIA GeForce GTX 1660 Ti with Max-Q Design",
+            "TOTAL_COPY_IN_SIZE_BYTES": "24",
+            "TASK_KERNEL_TIME": "9728"
+        }
+    }
+}
+

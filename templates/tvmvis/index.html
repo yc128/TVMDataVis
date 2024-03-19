@@ -12,11 +12,14 @@
     <!-- import js -->
     <script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>
     <script type="text/javascript">
-        var chartData = JSON.parse('{{ serialized_data|safe }}');
+        var charDatas = JSON.parse('{{ serialized_datas|safe }}');
+        var charTitles = JSON.parse('{{ serialized_titles|safe }}');
 
-        drawLineChart(chartData, 'chart_div1');
+        drawLineChartByTitle(charDatas, charTitles[0], 'chart_div2');
+        updateLineChart(charTitles[1], 'chart_div2');
     </script>
     <div id="chart_div1" style="width: 700px; height: 300px;"></div>
+    <div id="chart_div2" style="width: 700px; height: 300px;"></div>
 
 
 </body>

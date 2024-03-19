@@ -1,16 +1,17 @@
 from tvmvis.models import Benchmark
 
 
-def insert_json_data(json_results):
+def insert_json_data(json_results, json_time):
     """
     Store parsed json into db
 
+    :param json_time: json file last mod time, used for runID generation
     :param json_results: json data
     """
     for idx, data in enumerate(json_results):
         # Create Benchmark
         benchmark_instance = Benchmark(
-            RunId=idx,  # Assuming 0, 1, 2, 3, ...
+            RunId=json_time.strftime("%Y%m%d_%H:%M:%S") + '-' + str(idx),
             TOTAL_TASK_GRAPH_TIME=data.get('TOTAL_TASK_GRAPH_TIME'),
             COPY_IN_TIME=data.get('COPY_IN_TIME'),
             COPY_OUT_TIME=data.get('COPY_OUT_TIME'),

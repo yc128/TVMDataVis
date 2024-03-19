@@ -1,7 +1,14 @@
+import datetime
 import json
+import os.path
 
 
 def read_json_objects(file_path):
+    """
+    JSON reader for profiler_output
+    :param file_path:
+    :return:
+    """
     results = []
     with open(file_path, 'r') as file:
         file_content = file.read()
@@ -26,4 +33,7 @@ def read_json_objects(file_path):
     return results
 
 
-
+def get_file_mod_time(file_path):
+    last_mod_time = os.path.getmtime(file_path)
+    readable_time = datetime.datetime.fromtimestamp(last_mod_time)
+    return readable_time

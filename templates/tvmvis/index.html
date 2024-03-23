@@ -4,22 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-     <!-- import Google Charts -->
+    <!-- import Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="{% static 'tvmvis/index.css' %}">
 
 </head>
 <body>
-    <!-- import js -->
-    <script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>
-    <script type="text/javascript">
-        var charDatas = JSON.parse('{{ serialized_datas|safe }}');
-        var charTitles = JSON.parse('{{ serialized_titles|safe }}');
+<!-- import js -->
+<script type="text/javascript">
+    var charDatas = JSON.parse('{{ serialized_datas|safe }}');
+    var charTitles = JSON.parse('{{ serialized_titles|safe }}');
+</script>
+<script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>
+<script type="text/javascript" src="{% static 'tvmvis/index.js' %}"></script>
+{#    <div id="chart_div2" style="width: 300px; height: 600px;"></div>#}
 
-        drawLineChartByTitle(charDatas, charTitles[0], 'chart_div2');
-        updateLineChart(charTitles[1], 'chart_div2');
-    </script>
-    <div id="chart_div1" style="width: 700px; height: 300px;"></div>
-    <div id="chart_div2" style="width: 700px; height: 300px;"></div>
+<div class="chart-container">
+    <div class="chart-group" id="chart-group1">
+        <!-- chart title selector -->
+        <select class="chart-title-selector" id="optionSelect1" onchange="updateTable(this)"></select>
+
+        <!-- chart div -->
+        <div class="chart-div" id="tableDiv1"></div>
+    </div>
+
+    <div class="chart-group" id="chart-group2">
+        <!-- chart title selector -->
+        <select class="chart-title-selector" id="optionSelect2" onchange="updateTable(this)"></select>
+
+        <!-- chart div -->
+        <div class="chart-div" id="tableDiv2"></div>
+    </div>
+
+    <div class="chart-group" id="chart-group3">
+        <!-- chart title selector -->
+        <select class="chart-title-selector" id="optionSelect3" onchange="updateTable(this)"></select>
+
+        <!-- chart div -->
+        <div class="chart-div" id="tableDiv3"></div>
+    </div>
+
+    <div class="chart-group" id="chart-group4">
+        <!-- chart title selector -->
+        <select class="chart-title-selector" id="optionSelect4" onchange="updateTable(this)"></select>
+
+        <!-- chart div -->
+        <div class="chart-div" id="tableDiv4"></div>
+    </div>
+</div>
+
 
 
 </body>

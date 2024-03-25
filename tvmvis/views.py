@@ -18,8 +18,13 @@ def index(request):
 
 def fetch_data(request):
     y_axis = request.GET.get('yTitle', "default_value")
+    y_axis_add = request.GET.get('yTitleAdd', "default_value")
 
-    data = load_chart_datas(x_axes=[Benchmark._meta.pk.name],
-                            y_axes=[y_axis])
+    if y_axis_add == "-" or y_axis_add == "--":
+        data = load_chart_datas(x_axes=[Benchmark._meta.pk.name],
+                                y_axes=[y_axis])
+    else:
+        data = load_chart_datas(x_axes=[Benchmark._meta.pk.name, Benchmark._meta.pk.name],
+                                y_axes=[y_axis, y_axis_add])
 
     return HttpResponse(data, content_type="application/json")

@@ -1,0 +1,9 @@
+{
+    "gcc": "gcc.exe (tdm64-1) 10.3.0",
+    "OS": "Windows-10-10.0.22621-SP0",
+    "Driver": "545.84",
+    "JVM": "null",
+    "Maven": "null",
+    "CMake": "cmake version 3.28.3",
+    "Python": "3.9.0"
+}

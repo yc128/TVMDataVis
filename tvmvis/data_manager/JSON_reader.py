@@ -3,7 +3,7 @@ import json
 import os.path
 
 
-def read_json_objects(file_path):
+def read_profiler_json_objects(file_path):
     """
     JSON reader for profiler_output
     :param file_path:
@@ -31,6 +31,12 @@ def read_json_objects(file_path):
                     except json.JSONDecodeError as e:
                         print(f"Error decoding JSON: {e}")
     return results
+
+
+def read_json_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data_dict = json.load(file)
+    return data_dict
 
 
 def get_file_mod_time(file_path):

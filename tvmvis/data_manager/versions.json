@@ -1,9 +1,9 @@
 {
     "gcc": "gcc.exe (tdm64-1) 10.3.0",
     "OS": "Windows-10-10.0.22621-SP0",
-    "Driver": "545.84",
+    "Driver": "Nvidia_smi: 545.84; OpenCL: null",
     "JVM": "null",
     "Maven": "null",
-    "CMake": "cmake version 3.28.3",
+    "CMake": "null",
     "Python": "3.9.0"
 }

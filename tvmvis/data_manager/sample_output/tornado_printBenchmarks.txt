@@ -1,0 +1,17 @@
+[0;32mList of benchmarks: [0;0m
+[;1m	*saxpy[0;0m
+[;1m	*addImage[0;0m
+[;1m	*stencil[0;0m
+[;1m	*convolvearray[0;0m
+[;1m	*convolveimage[0;0m
+[;1m	*blackscholes[0;0m
+[;1m	*montecarlo[0;0m
+[;1m	*blurFilter[0;0m
+[;1m	*renderTrack[0;0m
+[;1m	*euler[0;0m
+[;1m	*nbody[0;0m
+[;1m	*sgemm[0;0m
+[;1m	*dgemm[0;0m
+[;1m	*mandelbrot[0;0m
+[;1m	*dft[0;0m
+[;1m	*juliaset[0;0m

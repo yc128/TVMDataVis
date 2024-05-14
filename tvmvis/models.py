@@ -3,13 +3,13 @@ from django.db import models
 
 class Run(models.Model):
     RunID = models.AutoField(primary_key=True)
-    DateTime = models.DateTimeField()
-    CommitPoint = models.CharField(max_length=255)
-    LatestRelease = models.CharField(max_length=255)
-    Description = models.TextField()
+    DateTime = models.DateTimeField() # last modified time of output_profiler, or dateTime data in other place?
+    CommitPoint = models.CharField(max_length=255) # can not relate
+    LatestRelease = models.CharField(max_length=255) # can not relate
+    Description = models.TextField() # can not relate
 
 
-class Benchmark(models.Model):
+class Benchmark(models.Model): # can not relate
     BenchmarkID = models.AutoField(primary_key=True)
     Run = models.ForeignKey(Run, on_delete=models.CASCADE)
     BenchmarkName = models.CharField(max_length=255)
@@ -21,7 +21,7 @@ class Benchmark(models.Model):
     Dimension = models.IntegerField()
 
 
-class TotalResults(models.Model):
+class TotalResults(models.Model): # can not relate
     ResultID = models.AutoField(primary_key=True)
     Benchmark = models.ForeignKey(Benchmark, on_delete=models.CASCADE)
     TotalAverageTime = models.BigIntegerField()
@@ -35,16 +35,16 @@ class TotalResults(models.Model):
 class TaskGraphResults(models.Model):
     TaskGraphID = models.AutoField(primary_key=True)
     Result = models.ForeignKey(TotalResults, on_delete=models.CASCADE)
-    MinimumKernelsTime = models.IntegerField()
-    KernelAverage = models.IntegerField()
-    Copy_IN = models.IntegerField()
-    Copy_OUT = models.IntegerField()
-    Compilation_Graal = models.IntegerField()
-    Compilation_Driver = models.IntegerField()
-    Dispatch_Time = models.IntegerField()
+    MinimumKernelsTime = models.IntegerField() # can not relate
+    KernelAverage = models.IntegerField() # can not relate
+    Copy_IN = models.IntegerField() # Use copy in time in profiler
+    Copy_OUT = models.IntegerField() # Use copy out time in profiler
+    Compilation_Graal = models.IntegerField() # can not relate
+    Compilation_Driver = models.IntegerField() # can not relate
+    Dispatch_Time = models.IntegerField() # can not relate
 
 
-class TaskResults(models.Model):
+class TaskResults(models.Model): # can not relate
     TaskID = models.AutoField(primary_key=True)
     TaskGraphResult = models.ForeignKey(TaskGraphResults, on_delete=models.CASCADE)
     HardwareInfo = models.CharField(max_length=255)
@@ -54,7 +54,7 @@ class TaskResults(models.Model):
     DriverCompilationTime = models.IntegerField()
 
 
-class SoftwareConfiguration(models.Model):
+class SoftwareConfiguration(models.Model): # Use result from versions.json
     SoftwareID = models.AutoField(primary_key=True)
     OSVersion = models.CharField(max_length=255)
     DriverVersion = models.CharField(max_length=255)
@@ -65,7 +65,7 @@ class SoftwareConfiguration(models.Model):
     PythonVersion = models.CharField(max_length=255)
 
 
-class HardwareConfiguration(models.Model):
+class HardwareConfiguration(models.Model): # can not relate
     HardwareInfo = models.AutoField(primary_key=True)
     DeviceID = models.IntegerField()
     DeviceType = models.CharField(max_length=255)
@@ -85,6 +85,4 @@ class HardwareConfiguration(models.Model):
     HalfPrecisionSupport = models.BooleanField()
     DoubleSupport = models.BooleanField()
 
-# Ensure you also add the related_name if you need to navigate backwards from related models:
-# Example:
-# Run = models.ForeignKey(Run, on_delete=models.CASCADE, related_name='benchmarks')
+

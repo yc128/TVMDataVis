@@ -35,13 +35,13 @@ class TotalResults(models.Model): # can not relate
 class TaskGraphResults(models.Model):
     TaskGraphID = models.AutoField(primary_key=True)
     Result = models.ForeignKey(TotalResults, on_delete=models.CASCADE)
-    MinimumKernelsTime = models.IntegerField() # can not relate
-    KernelAverage = models.IntegerField() # can not relate
-    Copy_IN = models.IntegerField() # Use copy in time in profiler
-    Copy_OUT = models.IntegerField() # Use copy out time in profiler
-    Compilation_Graal = models.IntegerField() # can not relate
-    Compilation_Driver = models.IntegerField() # can not relate
-    Dispatch_Time = models.IntegerField() # can not relate
+    MinimumKernelsTime = models.IntegerField()
+    KernelAverage = models.IntegerField()
+    Copy_IN = models.IntegerField()
+    Copy_OUT = models.IntegerField()
+    Compilation_Graal = models.IntegerField()
+    Compilation_Driver = models.IntegerField()
+    Dispatch_Time = models.IntegerField()
 
 
 class TaskResults(models.Model): # can not relate

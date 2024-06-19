@@ -18,6 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # profiler path
 PROFILER_JSON_FILE_PATH = BASE_DIR / 'profiler_output.json'
 
+# tornado-benchmarks.py path
+BENCHMARK_PATH = '%Benchmark script path%'
+
 # versions.json path
 VERSIONS_JSON_FILE_PATH = BASE_DIR / 'tvmvis/data_manager/versions.json'
 

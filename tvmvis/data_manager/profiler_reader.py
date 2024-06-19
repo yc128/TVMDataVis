@@ -1,14 +1,19 @@
 import json
+from django.conf import settings
 
 
-def parse_benchmark_file(file_path):
+def parse_benchmark_file(file_path=None):
     """
     This function is used to read output_profiler file with format:
     one param line with 3 json_blocks
     It will store
     :param file_path:
-    :return: bm_list: []['line', json_blocks]
+    :return: bm_list: []['"bm=" line', json_blocks]
     """
+
+    if file_path is None:
+        file_path = settings.PROFILER_JSON_FILE_PATH
+
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
@@ -58,63 +63,16 @@ def parse_benchmark_file(file_path):
     return bm_list
 
 
-def build_task_graph_results(benchmark_line, json_blocks):
+def parse_bm_line(bm_line):
     """
-    Build task_graph_result field by parsed profiler
-    :param benchmark_line: line starts with 'bm='
-    :param json_blocks: json_block array
-    :return: Dict of task_graph_results
+    Parse the line of "bm=...." read from profiler
+    :param bm_line:
+    :return:
     """
-    # 从benchmark_line解析必要的信息
-    bm_parts = benchmark_line.split(',')
-    bm_info = {part.split('=')[0].strip(): part.split('=')[1].strip() for part in bm_parts}
+    parts = bm_line.split(',')
+    result = {}
+    for part in parts:
+        key, value = part.split('=')
+        result[key.strip()] = value.strip()
+    return result
 
-    # 从第一个JSON块提取编译指标
-    first_json_block = json_blocks[0]
-    compilation_graal = int(first_json_block['benchmark']['TOTAL_GRAAL_COMPILE_TIME'])
-    compilation_driver = int(first_json_block['benchmark']['TOTAL_DRIVER_COMPILE_TIME'])
-
-    # 从最后一个JSON块提取数据传输和调度指标
-    last_json_block = json_blocks[-1]
-    copy_in = int(last_json_block['benchmark'].get('COPY_IN_TIME', 0))
-    copy_out = int(last_json_block['benchmark'].get('COPY_OUT_TIME', 0))
-    dispatch_time = int(last_json_block['benchmark'].get('TOTAL_DISPATCH_DATA_TRANSFERS_TIME', 0))
-    kernel_time = int(last_json_block['benchmark'].get('TOTAL_KERNEL_TIME', 0))
-
-    # 构建TaskGraphResults字典
-    task_graph_results = {
-        'Result': bm_info,  # 假设这是TotalResults的外键，需要实际对象
-        'MinimumKernelsTime': kernel_time,
-        'KernelAverage': kernel_time,  # 假设使用最后一个迭代的内核时间作为平均值
-        'Copy_IN': copy_in,
-        'Copy_OUT': copy_out,
-        'Compilation_Graal': compilation_graal,
-        'Compilation_Driver': compilation_driver,
-        'Dispatch_Time': dispatch_time
-    }
-
-    return task_graph_results
-
-
-# 使用示例
-file_path = 'sample_output/tornado_benchmarks_medium_profiler_2_iterations.txt'
-bm_list = parse_benchmark_file(file_path)
-
-benchmark_line = bm_list[0]['line']
-json_blocks = bm_list[0]['json_blocks']
-task_graph_results = build_task_graph_results(benchmark_line, json_blocks)
-
-# 输出结果
-import pprint
-
-pprint.pprint(task_graph_results)
-
-#
-# for i, bm in enumerate(bm_list):
-#     print(f"Benchmark {i+1}:")
-#     print("Line:")
-#     print(bm['line'])
-#     print("JSON Blocks:")
-#     for j, json_block in enumerate(bm['json_blocks']):
-#         print(f"JSON Block {j+1}:")
-#         print(json.dumps(json_block, indent=4))

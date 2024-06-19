@@ -35,13 +35,14 @@ class TotalResults(models.Model): # can not relate
 class TaskGraphResults(models.Model):
     TaskGraphID = models.AutoField(primary_key=True)
     Result = models.ForeignKey(TotalResults, on_delete=models.CASCADE)
-    MinimumKernelsTime = models.IntegerField()
+    LastKernelTime = models.IntegerField()
     KernelAverage = models.IntegerField()
     Copy_IN = models.IntegerField()
     Copy_OUT = models.IntegerField()
     Compilation_Graal = models.IntegerField()
     Compilation_Driver = models.IntegerField()
-    Dispatch_Time = models.IntegerField()
+    Dispatch_Kernel_Time = models.IntegerField()
+    Dispatch_DataTransfers_Time = models.IntegerField()
 
 
 class TaskResults(models.Model): # can not relate
@@ -52,6 +53,7 @@ class TaskResults(models.Model): # can not relate
     KernelTime = models.IntegerField()
     CodeGenerationTime = models.IntegerField()
     DriverCompilationTime = models.IntegerField()
+    PowerMetric = models.FloatField(null=True, blank=True)
 
 
 class SoftwareConfiguration(models.Model): # Use result from versions.json

@@ -66,8 +66,9 @@ def parse_benchmark_file(file_path=None):
 def parse_bm_line(bm_line):
     """
     Parse the line of "bm=...." read from profiler
+    From "key=value" lines build dict{"key":"value"}
     :param bm_line:
-    :return:
+    :return: dict
     """
     parts = bm_line.split(',')
     result = {}

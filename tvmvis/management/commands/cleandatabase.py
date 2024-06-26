@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from tvmvis.models import Benchmark
+from tvmvis.models import Run, Benchmark, TotalResults, TaskGraphResults, TaskResults, SoftwareConfiguration, HardwareConfiguration
 
 
 class Command(BaseCommand):
@@ -7,4 +7,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Benchmark.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS('Successfully deleted all benchmarks'))
+        Run.objects.all().delete()
+        TotalResults.objects.all().delete()
+        TaskGraphResults.objects.all().delete()
+        TaskResults.objects.all().delete()
+        SoftwareConfiguration.objects.all().delete()
+        HardwareConfiguration.objects.all().delete()
+        self.stdout.write(self.style.SUCCESS('Successfully deleted all tables'))

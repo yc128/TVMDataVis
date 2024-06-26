@@ -5,7 +5,7 @@ class Run(models.Model):
     RunID = models.AutoField(primary_key=True)
     DateTime = models.DateTimeField() # last modified time of output_profiler, or dateTime data in other place?
     CommitPoint = models.CharField(max_length=255) # can not relate
-    LatestRelease = models.CharField(max_length=255) # can not relate
+    Version = models.CharField(max_length=255) # can not relate
     Description = models.TextField() # can not relate
 
 
@@ -48,8 +48,8 @@ class TaskGraphResults(models.Model):
 class TaskResults(models.Model): # can not relate
     TaskID = models.AutoField(primary_key=True)
     TaskGraphResult = models.ForeignKey(TaskGraphResults, on_delete=models.CASCADE)
-    HardwareInfo = models.CharField(max_length=255)
-    SoftwareInfo = models.CharField(max_length=255)
+    HardwareInfo = models.CharField(null=True, max_length=255)
+    SoftwareInfo = models.CharField(null=True, max_length=255)
     KernelTime = models.IntegerField()
     CodeGenerationTime = models.IntegerField()
     DriverCompilationTime = models.IntegerField()

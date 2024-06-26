@@ -112,7 +112,8 @@ def build_benchmark_name_set_from_profiler():
 
 def parse_single_benchmark_name(bm):
     """
-    :param bm: Single element in bm_list parsed from profiler
+    :param bm: Single element in bm_list parsed from profiler,
+    which should include line and json blocks
     :return: benchmark name if exists, else None
     """
     parsed_bm_line = parse_bm_line(bm['line'])

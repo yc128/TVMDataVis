@@ -7,13 +7,10 @@ import re
 
 from command_line_io import run_command
 
-
 nvidia_SMI_failed = "NVIDIA-SMI has failed"
 
 
-
 def fetch_version_from_cmd():
-
     versions = {}
 
     # GCC
@@ -42,7 +39,7 @@ def fetch_version_from_cmd():
             break
     version_cl = driver_version
 
-    versions["Driver"] = "Nvidia_smi: "+version_nv+"; OpenCL: "+version_cl
+    versions["Driver"] = "Nvidia_smi: " + version_nv + "; OpenCL: " + version_cl
 
     # JVM
     input_command = "tornado -version"

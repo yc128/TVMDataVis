@@ -73,6 +73,8 @@ def build_tables(args):
     new_run = Run(**run_data)
     new_run.save()
 
+    print("New Run table saved")
+
     # Benchmark table build
     benchmark_list = build_benchmark_table_from_profiler(number_of_iterations=args.iterations,
                                                          benchmark_flags=args.jvmFlags)

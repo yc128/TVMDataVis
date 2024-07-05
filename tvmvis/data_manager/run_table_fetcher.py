@@ -2,6 +2,7 @@ from command_line_io import run_command
 from django.utils import timezone
 from datetime import datetime
 
+
 def build_run_table(description="Automated Jenkins pipeline"):
     run = {"Description": description}
 
@@ -10,10 +11,11 @@ def build_run_table(description="Automated Jenkins pipeline"):
 
     # If failed to run date cmd, use current time instead.
     input_date_time = timezone.now()
+    # line_datetime = '2024-07-05T07:44:23\n'
+    line_datetime = line_datetime.strip()
     if any(char.isdigit() for char in line_datetime):
         print("date from cmd:", line_datetime, ";")
         input_date_time = datetime.fromisoformat(line_datetime)
-
 
     run["DateTime"] = input_date_time
 
@@ -30,5 +32,3 @@ def build_run_table(description="Automated Jenkins pipeline"):
                 run["CommitPoint"] = line_arr[1]
 
     return run
-
-

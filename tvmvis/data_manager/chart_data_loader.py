@@ -15,13 +15,16 @@ def load_all_datas():
 
     x_axs = [x_axis for _ in range(len(y_axs))]
 
+    print("y_axs: ", y_axs)
+
     return load_chart_datas(x_axes=x_axs, y_axes=y_axs)
 
 
 def get_chart_title_list():
     x_axis = Benchmark._meta.pk.name
 
-    y_axs = [field.name for field in Benchmark._meta.get_fields()]
+    # code behind if not can exclude other fields using FK linking
+    y_axs = [field.name for field in Benchmark._meta.get_fields() if not field.auto_created or field.concrete]
     y_axs = [e for e in y_axs if e != x_axis]
     return y_axs
 
@@ -44,18 +47,17 @@ def load_chart_datas(x_axes, y_axes):
 
 
 def load_paired_chart_data(x_axis, y_axis, serialize=True,
-                           max_data_size=100, runId_filter='2024'):
+                           max_data_size=100):
     """
-    get required chart data from db, turn to json format
-    :param runId_filter: runId filter for requesting data
+    get required chart data from db, convert to json format
     :param max_data_size: maximum size for requesting data
     :param serialize: Decide whether to return a jsoned format
     :param x_axis: x title
     :param y_axis: y title
     :return: jsoned chart data
     """
-    data = Benchmark.objects.filter(RunId__contains=runId_filter)[:max_data_size]\
-        .values(x_axis, y_axis)
+    print(x_axis, y_axis)
+    data = Benchmark.objects.all()[:max_data_size].values(x_axis, y_axis)
     chart_data = [[x_axis, y_axis]]
 
     for entry in data:

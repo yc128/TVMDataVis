@@ -8,5 +8,6 @@ class TvmvisConfig(AppConfig):
     def ready(self):
         import sys
         if 'runserver' in sys.argv:
-            from .data_manager.store_json_to_db import store_json_to_db
-            store_json_to_db()
+            print("Server launched")
+            # from .data_manager.store_json_to_db import store_json_to_db
+            # store_json_to_db()

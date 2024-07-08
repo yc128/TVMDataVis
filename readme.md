@@ -1,5 +1,6 @@
 # Data Manager
 ## Instructions
+1. Open terminal in project root directory
 
 ### Set Environment
 1. Create virtual environment `python -m venv venv`

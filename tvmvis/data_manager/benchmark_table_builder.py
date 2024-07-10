@@ -52,7 +52,10 @@ def build_benchmark_table_from_profiler(number_of_iterations=-1,
         if len(bm_arr) > 2:
             size = bm_arr[2]
             bm_name_short = bm_arr[0]
-            dims = dim_dict[bm_name_short]
+            if bm_name_short in dim_dict:
+                dims = dim_dict[bm_name_short]
+            else:
+                print("cannot find dims for :", bm_name_short, " , set it to -1.")
         benchmark = build_single_benchmark_table(number_of_iterations=number_of_iterations,
                                                  benchmark_name=bm, benchmark_flags=benchmark_flags,
                                                  size_type=size_type, size_number=size,

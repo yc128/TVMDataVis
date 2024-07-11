@@ -115,7 +115,15 @@ def build_task_results(bm_line, json_blocks):
 
     # 从 bm_line 中提取相关信息
     benchmark_name = bm_data['bm']
+
+    # Temporary use device name in profiler for hardware_info
     hardware_info = None
+    if 'deviceName' in bm_data:
+        hardware_info = bm_data['deviceName']
+    elif 'id' in bm_data:
+        hardware_info = bm_data['id']
+    else:
+        print("cannot find device name: ", bm_data)
     software_info = None
 
     task_results = []

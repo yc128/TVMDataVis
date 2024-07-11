@@ -38,37 +38,45 @@ function drawLineChartByTitle(chartDatas, chartTitle, eleId){
 }
 
 
+// /**
+//  * Update the chart on given div with given params
+//  * @param chartTitle
+//  * @param eleId
+//  */
+// function updateLineChart(chartTitle, eleId){
+//     fetch(`/tvmvis/fetch-data/?yTitle=${chartTitle[0]}&yTitleAdd=${chartTitle[1]}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             // console.log("draw with data:")
+//             // console.log(data)
+//             drawLineChartByTitle(data, chartTitle, eleId);
+//         })
+// }
+
 /**
- * Update the chart on given div with given params
- * @param chartTitle
- * @param eleId
+ *
+ * @param comparisonMode: byRun or byDevice
+ * @param parameterType: yTitle
+ * @param runId
+ * @param deviceName
  */
-function updateLineChart(chartTitle, eleId){
-    fetch(`/tvmvis/fetch-data/?yTitle=${chartTitle[0]}&yTitleAdd=${chartTitle[1]}`)
+function updateTable(comparisonMode, parameterType, runId, deviceName) {
+
+    var groupLayout = selectYElement.closest('.chart-group');
+    var tableDiv = groupLayout.querySelector('.chart-div');
+
+
+    const url = new URL('/tvmvis/fetch-data/', window.location.origin);
+    url.searchParams.append('comparisonMode', comparisonMode);
+    url.searchParams.append('parameterType', parameterType);
+    runId.forEach(id => url.searchParams.append('runId', id));
+    deviceName.forEach(name => url.searchParams.append('deviceName', name));
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             // console.log("draw with data:")
             // console.log(data)
-            drawLineChartByTitle(data, chartTitle, eleId);
+            drawLineChartByTitle(data, chartTitle, tableDiv.id);
         })
-}
-
-
-function updateTable(selectElement, selectElementAdd) {
-    var selectedOption = [];
-    selectedOption.push(selectElement.value);
-    if(selectElementAdd !== undefined){
-        selectedOption.push(selectElementAdd.value);
-    }else{
-        selectedOption.push("--");
-    }
-
-    var groupLayout = selectElement.closest('.chart-group');
-    var tableDiv = groupLayout.querySelector('.chart-div');
-    // console.log(selectedOption);
-    // console.log(tableDiv);
-
-    // 现在你可以更新这个 tableDiv
-    // tableDiv.innerHTML = "<p>已选择：" + selectedOption + "</p>";
-    updateLineChart(selectedOption, tableDiv.id)
 }

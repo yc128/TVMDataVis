@@ -1,5 +1,7 @@
-from tvmvis.models import Benchmark
+from tvmvis.models import Benchmark, Run, TaskResults, TotalResults, TaskGraphResults
 import json
+from django.apps import apps
+from django.core.exceptions import FieldDoesNotExist
 
 
 def load_all_datas():
@@ -36,6 +38,7 @@ def load_chart_datas(x_axes, y_axes):
     :param y_axes: y axis title list
     :return: packed jsoned char datas
     """
+    # Dict with multi groups of data
     data_pack = {}
     for i in range(0, len(x_axes)):
         data = load_paired_chart_data(
@@ -58,6 +61,8 @@ def load_paired_chart_data(x_axis, y_axis, serialize=True,
     """
     print(x_axis, y_axis)
     data = Benchmark.objects.all()[:max_data_size].values(x_axis, y_axis)
+    # chart_data format:
+    # [[xTitle, yTitle], [xPos_1, yPos_1], [xPos_2, yPos2]..]
     chart_data = [[x_axis, y_axis]]
 
     for entry in data:
@@ -68,3 +73,70 @@ def load_paired_chart_data(x_axis, y_axis, serialize=True,
         return serialized_chart_data
     else:
         return chart_data
+
+
+def load_customize_chart_datas(x_axes, y_axes):
+    """
+
+    :param x_axes: x axis title list
+    :param y_axes: y axis title list
+    :return: packed jsoned char datas
+    """
+    # Dict with multi groups of data
+    data_pack = {}
+    for i in range(0, len(x_axes)):
+        data = load_paired_chart_data(
+            x_axis=x_axes[i], y_axis=y_axes[i], serialize=False)
+        data_pack[y_axes[i]] = data
+
+    serialized_data_pack = json.dumps(data_pack)
+    return serialized_data_pack
+
+
+def load_compared_paired_chart_data(comparison_mode, parameter_type,
+                                    run_ids, device_names, benchmark_name, max_data_size=100):
+    data_pack = {}
+    if comparison_mode == 'byRun':
+        for run_id in run_ids:
+
+            # Get specific run table
+            run = Run.objects.get(RunID=run_id)
+
+            # Get specific bm with same run and specific bm name
+            benchmarks = Benchmark.objects.filter(Run=run, BenchmarkName=benchmark_name)
+
+            # Get Benchmark
+            total_results = TotalResults.objects.filter(Benchmark__in=benchmarks)
+
+            # Get TotalResults
+            task_graph_results = TaskGraphResults.objects.filter(Result__in=total_results)
+
+            # Get TaskGraphResults
+            task_results = TaskResults.objects.filter(TaskGraphResult__in=task_graph_results)
+
+            datas = task_results.values('HardwareInfo', parameter_type)[:max_data_size]
+
+            chart_data = [['Device Name', parameter_type]]
+            for entry in datas:
+                chart_data.append([entry['HardwareInfo'], entry[parameter_type]])
+            data_pack[run_id] = chart_data
+    # TODO byDevice
+
+    serialized_data_pack = json.dumps(data_pack)
+    return serialized_data_pack
+
+
+def get_model_by_field_name(field_name):
+    # 遍历所有已注册的模型
+
+    for model in apps.get_models():
+        try:
+            # 尝试获取字段
+            model._meta.get_field(field_name)
+            # 如果字段存在，返回模型名称
+            return model
+        except FieldDoesNotExist:
+            # 如果字段不存在，继续检查下一个模型
+            continue
+            # 如果没有找到字段，返回 None
+    return None

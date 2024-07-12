@@ -60,15 +60,16 @@ function drawLineChartByTitle(chartDatas, chartTitle, eleId){
  * @param runId
  * @param deviceName
  */
-function updateTable(comparisonMode, parameterType, runId, deviceName) {
+function updateTable(comparisonMode, parameterType, runId, deviceName, benchmarkName) {
 
-    var groupLayout = selectYElement.closest('.chart-group');
-    var tableDiv = groupLayout.querySelector('.chart-div');
+    // var groupLayout = selectElement.closest('.chart-group');
+    // var tableDiv = groupLayout.querySelector('.chart-div');
 
 
     const url = new URL('/tvmvis/fetch-data/', window.location.origin);
     url.searchParams.append('comparisonMode', comparisonMode);
     url.searchParams.append('parameterType', parameterType);
+    url.searchParams.append('benchmarkName', benchmarkName);
     runId.forEach(id => url.searchParams.append('runId', id));
     deviceName.forEach(name => url.searchParams.append('deviceName', name));
 
@@ -77,6 +78,6 @@ function updateTable(comparisonMode, parameterType, runId, deviceName) {
         .then(data => {
             // console.log("draw with data:")
             // console.log(data)
-            drawLineChartByTitle(data, chartTitle, tableDiv.id);
+            // drawLineChartByTitle(data, chartTitle, tableDiv.id);
         })
 }

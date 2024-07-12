@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
         setSelector(selectElement);
         if(counter < charTitles.length){
             selectElement.value = charTitles[counter];
-            updateTable(selectElement, );
+            updateTable("byRun", "KernelTime",
+                [18, 19], ["A", "B"], "montecarlo-2-1024");
         }
         counter++;
     });
@@ -42,13 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // 为第一个 <select> 添加事件监听器
         select1.addEventListener('change', function() {
             // 当第一个 <select> 发生变化时，执行的逻辑
-            updateTable(select1, selectAdd);
+            // updateTable(select1, selectAdd);
         });
 
         // 如果你需要，也可以为第二个 <select> 添加监听器
         selectAdd.addEventListener('change', function() {
             // 当第二个 <select> 发生变化时，执行的逻辑
-            updateTable(select1, selectAdd);
+            // updateTable(select1, selectAdd);
         });
     });
 });

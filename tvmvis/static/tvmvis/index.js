@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setSelector(selectElement);
         if(counter < charTitles.length){
             selectElement.value = charTitles[counter];
-            updateTable("byRun", "KernelTime",
+            updateTable(selectElement,"byRun", "KernelTime",
                 [18, 19], ["A", "B"], "montecarlo-2-1024");
         }
         counter++;

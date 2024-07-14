@@ -18,23 +18,40 @@ var chartOption = {
 }
 
 
-function drawLineChartByTitle(chartDatas, chartTitle, eleId){
+function drawChartByTitle(chartDatas, chartTitle, eleId, chartType) {
+    /**
+     * @param chartDatas: dict chartData
+     * @param chartTitle: keys for extracting data from dict
+     */
     let chartData = chartDatas[chartTitle[0]];
-    if(chartTitle[1] != "-" && chartTitle[1] != "--"){
+    console.log("chartData: "+chartData);
+    if (chartTitle[1] != "-" && chartTitle[1] != "--") {
         let chartDataAdd = chartDatas[chartTitle[1]];
-        for(let i = 0; i < chartData.length; i++){
+        for (let i = 0; i < chartData.length; i++) {
             chartData[i].push(chartDataAdd[i][1]);
         }
     }
-    // console.log(chartData);
-    google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(function (){
+
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(function () {
         var data = google.visualization.arrayToDataTable(chartData);
         var chartElement = document.getElementById(eleId);
-        var chart = new google.visualization.LineChart(chartElement);
-        // console.log(data);
-        chart.draw(data, chartOption);
-    })
+        var chartOptions = {
+            title: chartType === 'LineChart' ? 'Line Chart' : 'Bar Chart',
+            hAxis: {title: 'X Axis Title'},
+            vAxis: {title: 'Y Axis Title'}
+        };
+
+        var chart;
+        if (chartType === 'LineChart') {
+            chart = new google.visualization.LineChart(chartElement);
+        } else if (chartType === 'BarChart') {
+            chartOptions.bars = 'horizontal';  // Required for Material Bar Charts
+            chart = new google.visualization.BarChart(chartElement);
+        }
+
+        chart.draw(data, chartOptions);
+    });
 }
 
 
@@ -60,10 +77,11 @@ function drawLineChartByTitle(chartDatas, chartTitle, eleId){
  * @param runId
  * @param deviceName
  */
-function updateTable(comparisonMode, parameterType, runId, deviceName, benchmarkName) {
+function updateTable(selectElement, comparisonMode, parameterType, runId, deviceName, benchmarkName) {
 
-    // var groupLayout = selectElement.closest('.chart-group');
-    // var tableDiv = groupLayout.querySelector('.chart-div');
+    //Use Selector to find its table div
+    const groupLayout = selectElement.closest('.chart-group');
+    const tableDiv = groupLayout.querySelector('.chart-div');
 
 
     const url = new URL('/tvmvis/fetch-data/', window.location.origin);
@@ -73,11 +91,12 @@ function updateTable(comparisonMode, parameterType, runId, deviceName, benchmark
     runId.forEach(id => url.searchParams.append('runId', id));
     deviceName.forEach(name => url.searchParams.append('deviceName', name));
 
+    var chartTitle = comparisonMode + "; "+benchmarkName;
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            // console.log("draw with data:")
-            // console.log(data)
-            // drawLineChartByTitle(data, chartTitle, tableDiv.id);
+            console.log("draw with data:")
+            console.log(data)
+            drawChartByTitle(data, runId, tableDiv.id, 'BarChart');
         })
 }

@@ -11,54 +11,26 @@
 </head>
 <body>
 <!-- import js -->
-<script type="text/javascript">
-    var charDatas = JSON.parse('{{ serialized_datas|safe }}');
-    var charTitles = JSON.parse('{{ serialized_titles|safe }}');
-</script>
 <script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>
 <script type="text/javascript" src="{% static 'tvmvis/index.js' %}"></script>
-{#    <div id="chart_div2" style="width: 300px; height: 600px;"></div>#}
+
 
 <div class="chart-container">
     <div class="chart-group" id="chart-group1">
         <!-- chart title selector -->
         <div class="title-sel-group">
-            <select class="chart-title-selector"></select>
-            <select class="chart-title-selector-add"></select>
+            <select class="comparison-mode-selector"></select>
+            <select class="parameter-selector"></select>
+            <select class="comparison-target-selector"></select>
+            <select class="comparison-target-selector-compared"></select>
+            <select class="benchmark-name-selector"></select>
+            <button class="generate-button">Chart Generate</button>
         </div>
 
         <!-- chart div -->
         <div class="chart-div" id="tableDiv1"></div>
     </div>
-    <div class="chart-group" id="chart-group2">
-            <!-- chart title selector -->
-            <div class="title-sel-group">
-                <select class="chart-title-selector"></select>
-                <select class="chart-title-selector-add"></select>
-            </div>
 
-            <!-- chart div -->
-            <div class="chart-div" id="tableDiv2"></div>
-    </div>
-    <div class="chart-group" id="chart-group3">
-            <!-- chart title selector -->
-            <div class="title-sel-group">
-                <select class="chart-title-selector"></select>
-                <select class="chart-title-selector-add"></select>
-            </div>
-
-            <!-- chart div -->
-            <div class="chart-div" id="tableDiv3"></div>
-    </div>
-    <div class="chart-group" id="chart-group4">
-            <!-- chart title selector -->
-            <div class="title-sel-group">
-                <select class="chart-title-selector"></select>
-                <select class="chart-title-selector-add"></select>
-            </div>
-
-            <!-- chart div -->
-            <div class="chart-div" id="tableDiv4"></div>
     </div>
 </div>
 

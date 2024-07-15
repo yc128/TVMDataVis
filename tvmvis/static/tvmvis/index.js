@@ -1,69 +1,145 @@
-var newChartTitle = []
-charTitles.forEach(function (chartTitle) {
-    if(typeof charDatas[chartTitle][1][1] === 'number'){
-        newChartTitle.push(chartTitle)
-    }
-})
-charTitles = newChartTitle
-
-
-
-
-
-
 //Selector Initialization
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.chart-title-selector-add').forEach(function (selectElement) {
-        setSelector(selectElement);
-        var option = new Option("-", "-");
-        selectElement.add(option);
-        selectElement.value = "-";
+    document.querySelectorAll('.comparison-mode-selector').forEach(function (selectorElement) {
+        setSelector(selectorElement, ["byRun", "byDevice"]);
     })
 
-    // 查找所有类名为 'auto-init-select' 的 <select> 元素
-    let counter = 0;
-    document.querySelectorAll('.chart-title-selector').forEach(function(selectElement) {
-        setSelector(selectElement);
-        if(counter < charTitles.length){
-            selectElement.value = charTitles[counter];
-            updateTable(selectElement,"byRun", "KernelTime",
-                [18, 19], ["A", "B"], "montecarlo-2-1024");
-        }
-        counter++;
-    });
+    document.querySelectorAll('.parameter-selector').forEach(function (selectorElement) {
+        const url = new URL('/tvmvis/fetch-param-types-data/', window.location.origin);
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log("param types data:")
+                console.log(data)
+                data.forEach(function (optionText) {
+                    const option = new Option(optionText, optionText);
+                    selectorElement.add(option)
+                })
+
+            })
+    })
+
+    document.querySelectorAll('.comparison-mode-selector').forEach(function (selectorElement) {
+        const groupLayout = selectorElement.closest('.title-sel-group');
+        let targetSelectorElement = groupLayout.querySelector('.comparison-target-selector');
+        updateTargetSelector(targetSelectorElement, selectorElement.value)
+
+        let targetSelectorElementCompare = groupLayout.querySelector('.comparison-target-selector-compared');
+        updateTargetSelector(targetSelectorElementCompare, selectorElement.value)
+    })
+
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 为所有 .chart-group 容器中的 <select> 元素添加监听器
-    document.querySelectorAll('.title-sel-group').forEach(function(pair) {
-        // 获取当前容器中的两个 <select> 元素
-        const [select1, selectAdd] = pair.querySelectorAll('select');
+document.addEventListener('DOMContentLoaded', function () {
 
-        // 为第一个 <select> 添加事件监听器
-        select1.addEventListener('change', function() {
-            // 当第一个 <select> 发生变化时，执行的逻辑
-            // updateTable(select1, selectAdd);
-        });
+    //Update comparison-target-selector, comparison-target-selector-compared
+    //according to comp mode value when it changes
+    document.querySelectorAll('.comparison-mode-selector').forEach(function (selectorElement) {
+        const groupLayout = selectorElement.closest('.title-sel-group');
+        selectorElement.addEventListener('change', function () {
+            let targetSelectorElement = groupLayout.querySelector('.comparison-target-selector');
+            updateTargetSelector(targetSelectorElement, selectorElement.value)
 
-        // 如果你需要，也可以为第二个 <select> 添加监听器
-        selectAdd.addEventListener('change', function() {
-            // 当第二个 <select> 发生变化时，执行的逻辑
-            // updateTable(select1, selectAdd);
-        });
-    });
+            let targetSelectorElementCompare = groupLayout.querySelector('.comparison-target-selector-compared');
+            updateTargetSelector(targetSelectorElementCompare, selectorElement.value)
+        })
+    })
+
+    //Update benchmark-name-selector according to comp target values
+    document.querySelectorAll('.comparison-target-selector, .comparison-target-selector-compared').forEach(function (selectorElement) {
+        const groupLayout = selectorElement.closest('.title-sel-group');
+
+        let bmNameSelectorElement = groupLayout.querySelector('.benchmark-name-selector');
+        let targetSelectorElement = groupLayout.querySelector('.comparison-target-selector');
+        let targetSelectorElementCompare = groupLayout.querySelector('.comparison-target-selector-compared');
+
+        let compMode = groupLayout.querySelector('.comparison-mode-selector').value;
+
+        selectorElement.addEventListener('change', function () {
+            updateBenchmarkNameSelector(bmNameSelectorElement, compMode,
+                targetSelectorElement.value, targetSelectorElementCompare.value)
+        })
+    })
+
+    document.querySelectorAll('.generate-button').forEach(function (ButtonElement) {
+        ButtonElement.addEventListener('click', function () {
+            console.log("Start Generate")
+            const groupLayout = ButtonElement.closest('.title-sel-group');
+            let bmName = groupLayout.querySelector('.benchmark-name-selector').value;
+            let target = groupLayout.querySelector('.comparison-target-selector').value;
+            let targetCompared = groupLayout.querySelector('.comparison-target-selector-compared').value;
+            let compMode = groupLayout.querySelector('.comparison-mode-selector').value;
+            let paramType = groupLayout.querySelector('.parameter-selector').value;
+            let runIds = [];
+            let deviceNames = [];
+            if (compMode == "byRun") {
+                runIds.push(target);
+                runIds.push(targetCompared);
+            } else {
+                deviceNames.push(target);
+                deviceNames.push(targetCompared);
+            }
+            updateTable(ButtonElement, compMode, paramType, runIds, deviceNames, bmName)
+        })
+
+    })
+
 });
 
 
-// drawLineChartByTitle(charDatas, charTitles[0], 'chart_div2');
-// updateLineChart(charTitles[1], 'chart_div2');
-
-
-function setSelector(selectElement) {
+function setSelector(selectElement, options) {
     // Add option for <select>
-        charTitles.forEach(function(optionText) {
-            var option = new Option(optionText, optionText);
-            selectElement.add(option);
-        });
+    options.forEach(function (optionText) {
+        var option = new Option(optionText, optionText);
+        selectElement.add(option);
+    });
 
+}
+
+function updateTargetSelector(targetSelectorElement, comparisonMode) {
+
+    //Clean previous options
+    while (targetSelectorElement.options.length > 0) {
+        targetSelectorElement.remove(0);
+    }
+
+    //Fetch comparison option data and add into selector
+    const url = new URL('/tvmvis/fetch-relative-mode-data/', window.location.origin);
+    url.searchParams.append('comparisonMode', comparisonMode);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log("relative mode data:")
+            console.log(data)
+            data.forEach(function (optionText) {
+                const option = new Option(optionText, optionText);
+                targetSelectorElement.add(option)
+            })
+
+        })
+
+}
+
+function updateBenchmarkNameSelector(bmNameSelectorElement, compMode, compTar1Val, compTar2Val) {
+    //Clean previous options
+    while (bmNameSelectorElement.options.length > 0) {
+        bmNameSelectorElement.remove(0);
+    }
+    //Fetch bm name option data and add into selector
+    const url = new URL('/tvmvis/fetch-benchmark-name-data/', window.location.origin);
+    url.searchParams.append('comparisonMode', compMode);
+    url.searchParams.append('compareTargets', compTar1Val);
+    url.searchParams.append('compareTargets', compTar2Val);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log("bm name data:")
+            console.log(data)
+            data.forEach(function (optionText) {
+                const option = new Option(optionText, optionText);
+                bmNameSelectorElement.add(option)
+            })
+
+        })
 }

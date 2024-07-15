@@ -5,8 +5,7 @@ import json
 
 from django.shortcuts import render
 
-from tvmvis.chart_data_manager.chart_data_loader import load_all_datas, get_chart_title_list, \
-    load_compared_paired_chart_data
+from tvmvis.chart_data_manager.chart_data_loader import *
 
 
 # Create your views here.
@@ -26,7 +25,6 @@ def fetch_data(request):
     run_ids = request.GET.getlist('runId')
     device_names = request.GET.getlist('deviceName')
 
-
     # TODO logic handling
 
     data = load_compared_paired_chart_data(comparison_mode=comparison_mode,
@@ -39,11 +37,32 @@ def fetch_data(request):
 
     return HttpResponse(data, content_type="application/json")
 
-    # if y_axis_add == "-" or y_axis_add == "--":
-    #     data = load_chart_datas(x_axes=[Benchmark._meta.pk.name],
-    #                             y_axes=[y_axis])
-    # else:
-    #     data = load_chart_datas(x_axes=[Benchmark._meta.pk.name, Benchmark._meta.pk.name],
-    #                             y_axes=[y_axis, y_axis_add])
-    #
-    # return HttpResponse(data, content_type="application/json")
+
+def fetch_relative_mode_data(request):
+    comparison_mode = request.GET.get('comparisonMode')
+    if comparison_mode == 'byRun':
+        data = get_all_run_ids()
+    else:
+        data = get_all_device_names()
+
+    print("mode data:", data)
+    return HttpResponse(data, content_type="application/json")
+
+
+def fetch_param_types_data(request):
+    data = get_all_param_types()
+    print("param data:", data)
+    return HttpResponse(data, content_type="application/json")
+
+
+def fetch_benchmark_name_data(request):
+    comparison_mode = request.GET.get('comparisonMode')
+    compare_targets = request.GET.getlist('compareTargets')
+    if comparison_mode == "byRun":
+        data = get_common_benchmark_names_by_run_ids(compare_targets)
+    else:
+        # TODO Change when get_common_benchmark_names_by_device_names is completed.
+        data = get_common_benchmark_names_by_run_ids([1, 2])
+
+    print("bmName data:", data)
+    return HttpResponse(data, content_type="application/json")

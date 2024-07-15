@@ -1,3 +1,5 @@
+from django.db.models import ForeignKey
+
 from tvmvis.models import Benchmark, Run, TaskResults, TotalResults, TaskGraphResults
 import json
 from django.apps import apps
@@ -29,6 +31,58 @@ def get_chart_title_list():
     y_axs = [field.name for field in Benchmark._meta.get_fields() if not field.auto_created or field.concrete]
     y_axs = [e for e in y_axs if e != x_axis]
     return y_axs
+
+
+def get_all_param_types():
+    fields = TaskResults._meta.get_fields()
+
+    # extract needed fields
+    # exclude PK, FK, field for DeviceName
+    field_names = [
+        field.name for field in fields
+        if not isinstance(field, ForeignKey)
+           and not field.primary_key
+           and field.name != 'HardwareInfo'
+    ]
+
+    return json.dumps(field_names)
+
+
+def get_all_run_ids():
+    # query Run object's runId and remove duplicate
+    run_ids = Run.objects.values_list('RunID', flat=True).distinct()
+
+    # Convert QuerySet into list
+    return json.dumps(list(run_ids))
+
+
+def get_all_device_names():
+    # query TaskResults object's HardwareInfo and remove duplicate
+    device_names = TaskResults.objects.values_list('HardwareInfo', flat=True).distinct()
+
+    # Convert QuerySet into list
+    return json.dumps(list(device_names))
+
+
+# To avoid non-exist bm
+def get_common_benchmark_names_by_run_ids(run_ids):
+    # 如果run_ids为空，返回空列表
+    if not run_ids:
+        return []
+
+    # 查询每个runId对应的所有benchmarkName
+    all_benchmark_names = []
+    for run_id in run_ids:
+        bm_names = set(Benchmark.objects.filter(Run_id=run_id).values_list('BenchmarkName', flat=True))
+        all_benchmark_names.append(bm_names)
+
+    # 找出交集
+    common_benchmark_names = set.intersection(*all_benchmark_names)
+
+    return json.dumps(list(common_benchmark_names))
+
+
+# TODO get_common_benchmark_names_by_device_names
 
 
 def load_chart_datas(x_axes, y_axes):

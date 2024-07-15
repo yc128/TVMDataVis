@@ -18,15 +18,21 @@ var chartOption = {
 }
 
 
-function drawChartByTitle(chartDatas, chartTitle, eleId, chartType) {
+function drawChartByTitle(chartDatas, compTargetTitles, eleId, chartType, chartTitleList) {
     /**
      * @param chartDatas: dict chartData
-     * @param chartTitle: keys for extracting data from dict
+     * @param compTargetTitles: keys for extracting data from dict
+     * @param chartTitleList: List for chart title: [chartTitle, yTitle, xTitle]
      */
-    let chartData = chartDatas[chartTitle[0]];
+    let chartData = chartDatas[compTargetTitles[0]];
+    //Change legend
+    //TODO update when byDevice complete
+    chartData[0][1] = "Run-" + compTargetTitles[0];
     console.log("chartData: "+chartData);
-    if (chartTitle[1] != "-" && chartTitle[1] != "--") {
-        let chartDataAdd = chartDatas[chartTitle[1]];
+    if (compTargetTitles[1] != "-" && compTargetTitles[1] != "--") {
+        let chartDataAdd = chartDatas[compTargetTitles[1]];
+        //TODO update when byDevice complete
+        chartDataAdd[0][1] = "Run-" + compTargetTitles[1];
         for (let i = 0; i < chartData.length; i++) {
             chartData[i].push(chartDataAdd[i][1]);
         }
@@ -37,9 +43,10 @@ function drawChartByTitle(chartDatas, chartTitle, eleId, chartType) {
         var data = google.visualization.arrayToDataTable(chartData);
         var chartElement = document.getElementById(eleId);
         var chartOptions = {
-            title: chartType === 'LineChart' ? 'Line Chart' : 'Bar Chart',
-            hAxis: {title: 'X Axis Title'},
-            vAxis: {title: 'Y Axis Title'}
+            title: chartTitleList[0],
+            hAxis: {title: chartTitleList[1]},
+            vAxis: {title: chartTitleList[2]},
+            legend:{textStyle: {fontSize: 10}}
         };
 
         var chart;
@@ -91,12 +98,21 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
     runId.forEach(id => url.searchParams.append('runId', id));
     deviceName.forEach(name => url.searchParams.append('deviceName', name));
 
-    var chartTitle = comparisonMode + "; "+benchmarkName;
+    //Construct the charTitle, X,Y Title
+    var chartTitleList = [];
+    var chartTitle = comparisonMode + "; Benchmark: "+benchmarkName;
+    chartTitleList.push(chartTitle);
+    chartTitleList.push(parameterType);
+    if(comparisonMode == "byRun"){
+        chartTitleList.push("DeviceName");
+    }else{
+        chartTitleList.push("RunID");
+    }
     fetch(url)
         .then(response => response.json())
         .then(data => {
             console.log("draw with data:")
             console.log(data)
-            drawChartByTitle(data, runId, tableDiv.id, 'BarChart');
+            drawChartByTitle(data, runId, tableDiv.id, 'BarChart', chartTitleList);
         })
 }

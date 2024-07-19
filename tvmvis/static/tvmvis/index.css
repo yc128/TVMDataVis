@@ -1,34 +1,94 @@
-.chart-group {
-    width: 50vw;  /* 视口宽度的 50% */
-    height: 50vh; /* 视口高度的 50% */
-    margin: auto;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc;
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-.chart-div {
-    width: 90%;
-    height: 85%;
-}
-
+/* 容器样式 */
 .chart-container {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
 }
 
-#chart-group1 {
-    grid-column: 1 / span 1;
+.chart-group {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px 0;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#chart-group2 {
-    grid-row: 1 / span 2;
+/* 标题选择组样式 */
+.title-sel-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-#chart-group3 {
-    grid-row: 2 / span 1;
+.title-sel-group label {
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 5px;
 }
 
-#chart-group4 {
-    grid-column: 2 / span 2;
+.title-sel-group select,
+.title-sel-group button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.title-sel-group select:focus,
+.title-sel-group button:hover {
+    border-color: #aaa;
+}
+
+/* 按钮样式 */
+.generate-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+.generate-button:hover {
+    background-color: #0056b3;
+}
+
+/* 图表样式 */
+.chart-div {
+    width: 100%;
+    height: 300px;
+    background-color: #eef;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.title-sel-group label[for="comparison-target-selector"],
+.title-sel-group select.comparison-target-selector,
+.title-sel-group select.comparison-target-selector-compared {
+    flex-basis: 100%;
+}
+
+.title-sel-group label[for="comparison-target-selector"] {
+    margin-top: 20px; /* 增加上间距使其与前一行分开 */
 }

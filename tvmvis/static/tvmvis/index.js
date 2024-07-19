@@ -54,9 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let targetSelectorElement = groupLayout.querySelector('.comparison-target-selector');
         let targetSelectorElementCompare = groupLayout.querySelector('.comparison-target-selector-compared');
 
-        let compMode = groupLayout.querySelector('.comparison-mode-selector').value;
+        let compModeElement = groupLayout.querySelector('.comparison-mode-selector');
 
         selectorElement.addEventListener('change', function () {
+            compMode = compModeElement.value
             updateBenchmarkNameSelector(bmNameSelectorElement, compMode,
                 targetSelectorElement.value, targetSelectorElementCompare.value)
         })

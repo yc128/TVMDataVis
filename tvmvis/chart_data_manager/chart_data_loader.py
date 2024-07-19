@@ -1,4 +1,4 @@
-from django.db.models import ForeignKey
+from django.db.models import ForeignKey, Q
 
 from tvmvis.models import Benchmark, Run, TaskResults, TotalResults, TaskGraphResults
 import json
@@ -82,7 +82,35 @@ def get_common_benchmark_names_by_run_ids(run_ids):
     return json.dumps(list(common_benchmark_names))
 
 
-# TODO get_common_benchmark_names_by_device_names
+def get_common_benchmark_names_by_device_names(device_names):
+    if not device_names:
+        return []
+
+    all_benchmark_names = []
+    for device_name in device_names:
+        # Step 1: 获取与 device_name 相关的 TaskResults
+        task_results = TaskResults.objects.filter(HardwareInfo=device_name)
+
+        # Step 2: 获取与这些 TaskResults 相关的 TaskGraphResults
+        task_graph_results_ids = task_results.values_list('TaskGraphResult', flat=True)
+
+        # Step 3: 获取与这些 TaskGraphResults 相关的 TotalResults
+        total_results_ids = TaskGraphResults.objects.filter(TaskGraphID__in=task_graph_results_ids).values_list('Result', flat=True)
+
+        # Step 4: 获取与这些 TotalResults 相关的 Benchmarks
+        benchmark_ids = TotalResults.objects.filter(ResultID__in=total_results_ids).values_list('Benchmark', flat=True)
+
+        # Step 5: 获取 Benchmarks 的名字
+        bm_names = set(Benchmark.objects.filter(BenchmarkID__in=benchmark_ids).values_list('BenchmarkName', flat=True))
+
+        all_benchmark_names.append(bm_names)
+
+    # 找出交集
+    common_benchmark_names = set.intersection(*all_benchmark_names)
+
+    return json.dumps(list(common_benchmark_names))
+
+
 
 
 def load_chart_datas(x_axes, y_axes):
@@ -168,13 +196,40 @@ def load_compared_paired_chart_data(comparison_mode, parameter_type,
             # Get TaskGraphResults
             task_results = TaskResults.objects.filter(TaskGraphResult__in=task_graph_results)
 
+            # TODO can fit with other param types that in other tables
             datas = task_results.values('HardwareInfo', parameter_type)[:max_data_size]
 
             chart_data = [['Device Name', parameter_type]]
             for entry in datas:
                 chart_data.append([entry['HardwareInfo'], entry[parameter_type]])
             data_pack[run_id] = chart_data
-    # TODO byDevice
+    elif comparison_mode == 'byDevice':
+        for device_name in device_names:
+            # Get TaskResults with specific HardwareInfo (device name)
+            task_results = TaskResults.objects.filter(HardwareInfo=device_name)
+
+            # Get TaskGraphResults from TaskResults
+            task_graph_results = TaskGraphResults.objects.filter(
+                TaskGraphID__in=task_results.values_list('TaskGraphResult_id', flat=True))
+
+            # Get TotalResults from TaskGraphResults
+            total_results = TotalResults.objects.filter(
+                ResultID__in=task_graph_results.values_list('Result_id', flat=True))
+
+            # Get Benchmarks from TotalResults with specific benchmark name
+            benchmarks = Benchmark.objects.filter(BenchmarkID__in=total_results.values_list('Benchmark_id', flat=True),
+                                                  BenchmarkName=benchmark_name)
+
+            # Get Runs from Benchmarks
+            runs = Run.objects.filter(RunID__in=benchmarks.values_list('Run_id', flat=True))
+
+            datas = task_results.values('TaskGraphResult__Result__Benchmark__Run__RunID', parameter_type)[
+                    :max_data_size]
+
+            chart_data = [['Run ID', parameter_type]]
+            for entry in datas:
+                chart_data.append([entry['TaskGraphResult__Result__Benchmark__Run__RunID'], entry[parameter_type]])
+            data_pack[device_name] = chart_data
 
     serialized_data_pack = json.dumps(data_pack)
     return serialized_data_pack

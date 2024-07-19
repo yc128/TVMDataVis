@@ -24,15 +24,14 @@ function drawChartByTitle(chartDatas, compTargetTitles, eleId, chartType, chartT
      * @param compTargetTitles: keys for extracting data from dict
      * @param chartTitleList: List for chart title: [chartTitle, yTitle, xTitle]
      */
+    console.log(compTargetTitles)
     let chartData = chartDatas[compTargetTitles[0]];
-    //Change legend
-    //TODO update when byDevice complete
-    chartData[0][1] = "Run-" + compTargetTitles[0];
+
+    chartData[0][1] = compTargetTitles[0];
     console.log("chartData: "+chartData);
     if (compTargetTitles[1] != "-" && compTargetTitles[1] != "--") {
         let chartDataAdd = chartDatas[compTargetTitles[1]];
-        //TODO update when byDevice complete
-        chartDataAdd[0][1] = "Run-" + compTargetTitles[1];
+        chartDataAdd[0][1] = compTargetTitles[1];
         for (let i = 0; i < chartData.length; i++) {
             chartData[i].push(chartDataAdd[i][1]);
         }
@@ -62,21 +61,6 @@ function drawChartByTitle(chartDatas, compTargetTitles, eleId, chartType, chartT
 }
 
 
-// /**
-//  * Update the chart on given div with given params
-//  * @param chartTitle
-//  * @param eleId
-//  */
-// function updateLineChart(chartTitle, eleId){
-//     fetch(`/tvmvis/fetch-data/?yTitle=${chartTitle[0]}&yTitleAdd=${chartTitle[1]}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             // console.log("draw with data:")
-//             // console.log(data)
-//             drawLineChartByTitle(data, chartTitle, eleId);
-//         })
-// }
-
 /**
  *
  * @param comparisonMode: byRun or byDevice
@@ -103,16 +87,20 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
     var chartTitle = comparisonMode + "; Benchmark: "+benchmarkName;
     chartTitleList.push(chartTitle);
     chartTitleList.push(parameterType);
+
+    let compareTargets = []
     if(comparisonMode == "byRun"){
         chartTitleList.push("DeviceName");
+        compareTargets = runId;
     }else{
         chartTitleList.push("RunID");
+        compareTargets = deviceName;
     }
     fetch(url)
         .then(response => response.json())
         .then(data => {
             console.log("draw with data:")
             console.log(data)
-            drawChartByTitle(data, runId, tableDiv.id, 'BarChart', chartTitleList);
+            drawChartByTitle(data, compareTargets, tableDiv.id, 'BarChart', chartTitleList);
         })
 }

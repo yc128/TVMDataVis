@@ -25,8 +25,6 @@ def fetch_data(request):
     run_ids = request.GET.getlist('runId')
     device_names = request.GET.getlist('deviceName')
 
-    # TODO logic handling
-
     data = load_compared_paired_chart_data(comparison_mode=comparison_mode,
                                            parameter_type=parameter_type,
                                            run_ids=run_ids,
@@ -58,11 +56,11 @@ def fetch_param_types_data(request):
 def fetch_benchmark_name_data(request):
     comparison_mode = request.GET.get('comparisonMode')
     compare_targets = request.GET.getlist('compareTargets')
+    print("mode:", comparison_mode)
     if comparison_mode == "byRun":
         data = get_common_benchmark_names_by_run_ids(compare_targets)
     else:
-        # TODO Change when get_common_benchmark_names_by_device_names is completed.
-        data = get_common_benchmark_names_by_run_ids([1, 2])
+        data = get_common_benchmark_names_by_device_names(compare_targets)
 
     print("bmName data:", data)
     return HttpResponse(data, content_type="application/json")

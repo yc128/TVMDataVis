@@ -102,13 +102,13 @@ def get_common_benchmark_names_by_device_names(device_names):
         task_results = TaskResults.objects.filter(HardwareInfo=device_name)
 
         # Step 2: 获取与这些 TaskResults 相关的 TaskGraphResults
-        task_graph_results_ids = task_results.values_list('TaskGraphResult', flat=True)
+        task_graph_results_ids = task_results.values_list('TaskGraphResult', flat=True).distinct()
 
         # Step 3: 获取与这些 TaskGraphResults 相关的 TotalResults
-        total_results_ids = TaskGraphResults.objects.filter(TaskGraphID__in=task_graph_results_ids).values_list('Result', flat=True)
+        total_results_ids = TaskGraphResults.objects.filter(TaskGraphID__in=task_graph_results_ids).values_list('Result', flat=True).distinct()
 
         # Step 4: 获取与这些 TotalResults 相关的 Benchmarks
-        benchmark_ids = TotalResults.objects.filter(ResultID__in=total_results_ids).values_list('Benchmark', flat=True)
+        benchmark_ids = TotalResults.objects.filter(ResultID__in=total_results_ids).values_list('Benchmark', flat=True).distinct()
 
         # Step 5: 获取 Benchmarks 的名字
         bm_names = set(Benchmark.objects.filter(BenchmarkID__in=benchmark_ids).values_list('BenchmarkName', flat=True))
@@ -216,22 +216,21 @@ def load_compared_paired_chart_data(comparison_mode, parameter_type,
             # Get TaskResults
             task_results = TaskResults.objects.filter(TaskGraphResult__in=task_graph_results)
 
+            chart_data = [['HardwareInfo', parameter_type]]
             # Determine which table contains the parameter_type
             if parameter_type in [field.name for field in TaskResults._meta.fields]:
                 datas = task_results.values('HardwareInfo', parameter_type)[:max_data_size]
-                chart_data = [['HardwareInfo', parameter_type]]
             elif parameter_type in [field.name for field in TaskGraphResults._meta.fields]:
                 # Map data to ('HardwareInfo', param_type) format
                 mapped_datas = task_results.values('HardwareInfo', 'TaskGraphResult__' + parameter_type)[:max_data_size]
-                chart_data = [['HardwareInfo', parameter_type]]
                 datas = [
                     {'HardwareInfo': entry['HardwareInfo'], parameter_type: entry['TaskGraphResult__' + parameter_type]}
                     for entry in mapped_datas]
             elif parameter_type in [field.name for field in TotalResults._meta.fields]:
                 # Map data to ('HardwareInfo', param_type) format
-                mapped_datas = task_results.values('HardwareInfo', 'TaskGraphResult__Result__' + parameter_type)[
+                mapped_datas = task_results.values('HardwareInfo', 'TaskGraphResult__Result__' + parameter_type).distinct()[
                                :max_data_size]
-                chart_data = [['HardwareInfo', parameter_type]]
+                print("mapped_datas", mapped_datas)
                 datas = [{'HardwareInfo': entry['HardwareInfo'],
                           parameter_type: entry['TaskGraphResult__Result__' + parameter_type]} for entry in
                          mapped_datas]

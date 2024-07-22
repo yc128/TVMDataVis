@@ -124,6 +124,7 @@ def build_task_results(bm_line, json_blocks):
         hardware_info = bm_data['id']
     else:
         print("cannot find device name: ", bm_data)
+    # print(hardware_info)
     software_info = None
 
     task_results = []
@@ -136,7 +137,8 @@ def build_task_results(bm_line, json_blocks):
         benchmark_specifics = benchmark_details.get(f"benchmark.{benchmark_name.split('-')[0]}", {})
 
         # 填充 TaskResult 字典
-        task_result['HardwareInfo'] = benchmark_specifics.get("DEVICE", hardware_info)
+        # task_result['HardwareInfo'] = benchmark_specifics.get("DEVICE", hardware_info)
+        task_result['HardwareInfo'] = hardware_info
         task_result['SoftwareInfo'] = benchmark_specifics.get("BACKEND", software_info)
 
         # 根据 JSON block 填充不同的时间信息
@@ -154,7 +156,6 @@ def build_task_results(bm_line, json_blocks):
         task_results.append(task_result)
 
     return task_results
-
 
 # ===============================使用示例===============================
 # file_path = 'sample_output/tornado_benchmarks_medium_profiler_2_iterations.txt'

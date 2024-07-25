@@ -64,3 +64,11 @@ def fetch_benchmark_name_data(request):
 
     print("bmName data:", data)
     return HttpResponse(data, content_type="application/json")
+
+
+def fetch_commit_points(request):
+    run_ids = request.GET.getlist('runId')
+    commit_points = get_commit_point_by_run_ids(run_ids)
+
+    print("commit_points:", commit_points)
+    return HttpResponse(commit_points, content_type="application/json")

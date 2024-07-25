@@ -21,6 +21,10 @@ def build_run_table(description="Automated Jenkins pipeline"):
 
     input_command = "tornado --version"
     lines_tver = run_command(input_command).splitlines()
+
+    # Default CommitPoint for testing
+    # TODO Remove this after testing
+    run["CommitPoint"] = "606fc08"
     for line in lines_tver:
         if "version" in line:
             line_arr = line.split('=')

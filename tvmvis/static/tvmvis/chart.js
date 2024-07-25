@@ -103,4 +103,38 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
             console.log(data)
             drawChartByTitle(data, compareTargets, tableDiv.id, 'BarChart', chartTitleList);
         })
+
+    // Display commit point for each run
+    if(comparisonMode == "byRun"){
+        let url = new URL('/tvmvis/fetch-commit-point-by-runid/', window.location.origin);
+        runId.forEach(id => url.searchParams.append('runId', id));
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const commitPointDiv = groupLayout.querySelector('.commit-point-display');
+                commitPointDiv.innerHTML = '';
+                const ul = document.createElement('ul');
+
+                data.forEach(cp => {
+                    const li = document.createElement('li');
+                    cpTextContent = "Commit point:"+cp["CommitPoint"];
+                    li.textContent = "RunID:"+cp["RunID"]+"; ";
+                    if(cp["CommitPoint"].length > 0){
+                        var a = document.createElement('a');
+                        var link = document.createTextNode(cpTextContent);
+                        a.appendChild(link);
+                        a.title = "Link to Github Repo";
+                        a.target = '_blank';
+                        a.href = `https://github.com/beehive-lab/TornadoVM/commit/${cp["CommitPoint"]}`;
+                        li.appendChild(a);
+                    }
+                    ul.appendChild(li);
+                })
+
+
+                commitPointDiv.appendChild(ul);
+
+
+            })
+    }
 }

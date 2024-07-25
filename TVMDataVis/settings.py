@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # profiler path
 # Change to absolute path: Path('/absolute/path/to/profiler_output.json')
-PROFILER_JSON_FILE_PATH = BASE_DIR / 'profiler_output.json'
+PROFILER_JSON_FILE_PATH = BASE_DIR / 'console_output_iterations_2.txt'
 
 # tornado-benchmarks.py path
 # Change to absolute path: Path('/absolute/path/to/benchmark.py')

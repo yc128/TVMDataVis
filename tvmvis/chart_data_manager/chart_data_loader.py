@@ -52,7 +52,8 @@ def get_all_param_types():
     task_graph_results_fields = extract_numeric_fields(TaskGraphResults)
 
     # 合并所有字段名到一个列表中
-    all_fields = task_results_fields + total_results_fields + task_graph_results_fields
+    # all_fields = task_results_fields + total_results_fields + task_graph_results_fields
+    all_fields = total_results_fields
 
     return json.dumps(all_fields)
 
@@ -313,3 +314,13 @@ def get_model_by_field_name(field_name):
             continue
             # 如果没有找到字段，返回 None
     return None
+
+
+def get_commit_point_by_run_ids(run_ids):
+    # 查询数据库，获取给定 RunIDs 对应的 CommitPoint 列表
+    commit_points = Run.objects.filter(RunID__in=run_ids).values('RunID', 'CommitPoint')
+
+    print("cp:", commit_points)
+
+    # 将查询结果转换为列表并返回
+    return json.dumps(list(commit_points))

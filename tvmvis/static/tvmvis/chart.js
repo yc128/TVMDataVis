@@ -105,13 +105,13 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
         })
 
     // Display commit point for each run
+    const commitPointDiv = groupLayout.querySelector('.commit-point-display');
     if(comparisonMode == "byRun"){
         let url = new URL('/tvmvis/fetch-commit-point-by-runid/', window.location.origin);
         runId.forEach(id => url.searchParams.append('runId', id));
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                const commitPointDiv = groupLayout.querySelector('.commit-point-display');
                 commitPointDiv.innerHTML = '';
                 const ul = document.createElement('ul');
 
@@ -136,5 +136,7 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
 
 
             })
+    }else{
+        commitPointDiv.innerHTML = '';
     }
 }

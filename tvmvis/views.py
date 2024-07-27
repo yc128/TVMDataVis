@@ -10,8 +10,8 @@ from tvmvis.chart_data_manager.chart_data_loader import *
 
 # Create your views here.
 def index(request):
-    serialized_chart_datas = load_all_datas()
-    chart_title_list = json.dumps(get_chart_title_list())
+    serialized_chart_datas = {}
+    chart_title_list = {}
 
     return render(request, 'tvmvis/index.html', {
         'serialized_datas': serialized_chart_datas,

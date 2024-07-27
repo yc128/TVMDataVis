@@ -19,6 +19,7 @@ def build_run_table(description="Automated Jenkins pipeline"):
 
     run["DateTime"] = input_date_time
 
+    # TODO Complete the version reading function
     input_command = "tornado --version"
     lines_tver = run_command(input_command).splitlines()
 

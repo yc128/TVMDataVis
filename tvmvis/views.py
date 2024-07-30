@@ -39,7 +39,7 @@ def fetch_data(request):
 def fetch_relative_mode_data(request):
     comparison_mode = request.GET.get('comparisonMode')
     if comparison_mode == 'byRun':
-        data = get_all_run_ids()
+        data = get_all_run_details()
     else:
         data = get_all_device_names()
 

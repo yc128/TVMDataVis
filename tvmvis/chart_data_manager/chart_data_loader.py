@@ -3,6 +3,7 @@ from django.core.exceptions import FieldDoesNotExist
 from django.apps import apps
 from tvmvis.models import Benchmark, Run, TaskResults, TotalResults, TaskGraphResults
 import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 def get_chart_title_list():
@@ -33,13 +34,20 @@ def get_all_param_types():
     return json.dumps(all_fields)
 
 
-def get_all_run_ids():
+def get_all_run_details():
     """
-    Get all unique RunIDs from the Run table.
-    :return: JSON serialized list of RunIDs
+    Get all unique RunIDs, DateTime, and CommitPoint from the Run table.
+    :return: JSON serialized list of lists, each containing [RunID, DateTime, CommitPoint]
     """
-    run_ids = Run.objects.values_list('RunID', flat=True).distinct()
-    return json.dumps(list(run_ids))
+    run_details = Run.objects.values_list('RunID', 'DateTime', 'CommitPoint').distinct()
+
+    # Convert DateTime to string format
+    run_details_list = [
+        [run_id, date_time.strftime('%Y-%m-%d %H:%M:%S'), commit_point]
+        for run_id, date_time, commit_point in run_details
+    ]
+
+    return json.dumps(run_details_list, cls=DjangoJSONEncoder)
 
 
 def get_all_device_names():

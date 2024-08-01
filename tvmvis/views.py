@@ -36,6 +36,24 @@ def fetch_data(request):
     return HttpResponse(data, content_type="application/json")
 
 
+def fetch_data_by_benchmarks(request):
+    comparison_mode = request.GET.get('comparisonMode')
+    parameter_type = request.GET.get('parameterType')
+    benchmark_names = request.GET.getlist('benchmarkName')
+    run_ids = request.GET.getlist('runId')
+    device_names = request.GET.getlist('deviceName')
+
+    data = load_compared_paired_chart_data_by_benchmarks(comparison_mode=comparison_mode,
+                                                         parameter_type=parameter_type,
+                                                         run_ids=run_ids,
+                                                         device_names=device_names,
+                                                         benchmark_names=benchmark_names)
+
+    print("data:", data)
+
+    return HttpResponse(data, content_type="application/json")
+
+
 def fetch_relative_mode_data(request):
     comparison_mode = request.GET.get('comparisonMode')
     if comparison_mode == 'byRun':
@@ -72,3 +90,8 @@ def fetch_commit_points(request):
 
     print("commit_points:", commit_points)
     return HttpResponse(commit_points, content_type="application/json")
+
+
+
+def speedup_chart(request):
+    return render(request, 'tvmvis/speedupChart.html')

@@ -68,14 +68,14 @@ function initializeComparisonTargetChangeListeners() {
     document.querySelectorAll('.comparison-target-selector, .comparison-target-selector-compared').forEach(selectorElement => {
         const groupLayout = selectorElement.closest('.title-sel-group');
 
-        let bmNameSelectorElement = groupLayout.querySelector('.benchmark-name-selector');
+        let bmNameSelectorElement = groupLayout.querySelector('.benchmark-name-container');
         let targetSelectorElement = groupLayout.querySelector('.comparison-target-selector');
         let targetSelectorElementCompare = groupLayout.querySelector('.comparison-target-selector-compared');
         let compModeElement = groupLayout.querySelector('.comparison-mode-selector');
 
         selectorElement.addEventListener('change', () => {
             const compMode = compModeElement.value;
-            updateBenchmarkNameSelector(bmNameSelectorElement, compMode, targetSelectorElement.value, targetSelectorElementCompare.value);
+            updateBenchmarkNameContainer(bmNameSelectorElement, compMode, targetSelectorElement.value, targetSelectorElementCompare.value);
         });
     });
 }
@@ -88,7 +88,7 @@ function initializeGenerateButtonListeners() {
         ButtonElement.addEventListener('click', () => {
             console.log("Start Generate");
             const groupLayout = ButtonElement.closest('.title-sel-group');
-            const bmName = groupLayout.querySelector('.benchmark-name-selector').value;
+            const bmNames = Array.from(groupLayout.querySelectorAll('.benchmark-name-container input[type="checkbox"]:checked')).map(input => input.value);
             const target = groupLayout.querySelector('.comparison-target-selector').value;
             const targetCompared = groupLayout.querySelector('.comparison-target-selector-compared').value;
             const compMode = groupLayout.querySelector('.comparison-mode-selector').value;
@@ -101,7 +101,7 @@ function initializeGenerateButtonListeners() {
             } else {
                 deviceNames.push(target, targetCompared);
             }
-            updateTable(ButtonElement, compMode, paramType, runIds, deviceNames, bmName);
+            updateTable(ButtonElement, compMode, paramType, runIds, deviceNames, bmNames);
         });
     });
 }
@@ -145,20 +145,17 @@ function updateTargetSelector(targetSelectorElement, comparisonMode) {
         });
 }
 
+
 /**
- * Update benchmark name selector options based on comparison targets.
- * @param {Element} bmNameSelectorElement - The benchmark name selector element.
+ * Update benchmark name container with checkboxes based on comparison targets.
+ * @param {Element} bmNameContainer - The benchmark name container element.
  * @param {string} compMode - The selected comparison mode.
  * @param {string} compTar1Val - The value of the first comparison target.
  * @param {string} compTar2Val - The value of the second comparison target.
  */
-function updateBenchmarkNameSelector(bmNameSelectorElement, compMode, compTar1Val, compTar2Val) {
-    // Clear previous options
-    while (bmNameSelectorElement.options.length > 0) {
-        bmNameSelectorElement.remove(0);
-    }
+function updateBenchmarkNameContainer(bmNameContainer, compMode, compTar1Val, compTar2Val) {
+    bmNameContainer.innerHTML = '';  // Clear previous checkboxes
 
-    // Fetch new options based on the comparison targets
     const url = new URL('/tvmvis/fetch-benchmark-name-data/', window.location.origin);
     url.searchParams.append('comparisonMode', compMode);
     url.searchParams.append('compareTargets', compTar1Val);
@@ -167,9 +164,24 @@ function updateBenchmarkNameSelector(bmNameSelectorElement, compMode, compTar1Va
         .then(response => response.json())
         .then(data => {
             console.log("bm name data:", data);
+            // Sort data alphabetically
+            data.sort((a, b) => a.localeCompare(b));
+
             data.forEach(optionText => {
-                const option = new Option(optionText, optionText);
-                bmNameSelectorElement.add(option);
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = optionText;
+                checkbox.id = `benchmark-${optionText}`;
+
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = optionText;
+
+                const div = document.createElement('div');
+                div.appendChild(checkbox);
+                div.appendChild(label);
+
+                bmNameContainer.appendChild(div);
             });
         });
 }

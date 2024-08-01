@@ -68,28 +68,29 @@ function drawChartByTitle(chartDatas, compTargetTitles, eleId, chartType, chartT
  * @param runId
  * @param deviceName
  */
-function updateTable(selectElement, comparisonMode, parameterType, runId, deviceName, benchmarkName) {
+function updateTable(selectElement, comparisonMode, parameterType, runId, deviceName, benchmarkNames) {
 
     //Use Selector to find its table div
     const groupLayout = selectElement.closest('.chart-group');
     const tableDiv = groupLayout.querySelector('.chart-div');
 
 
-    const url = new URL('/tvmvis/fetch-data/', window.location.origin);
+    const url = new URL('/tvmvis/fetch-data-by-benchmarks/', window.location.origin);
     url.searchParams.append('comparisonMode', comparisonMode);
     url.searchParams.append('parameterType', parameterType);
-    url.searchParams.append('benchmarkName', benchmarkName);
+    // url.searchParams.append('benchmarkName', benchmarkName);
+    benchmarkNames.forEach(bm => url.searchParams.append('benchmarkNames', bm))
     runId.forEach(id => url.searchParams.append('runId', id));
     deviceName.forEach(name => url.searchParams.append('deviceName', name));
 
     //Construct the charTitle, X,Y Title
     var chartTitleList = [];
-    var chartTitle = comparisonMode + "; Benchmark: "+benchmarkName;
+    var chartTitle = comparisonMode + "; Benchmark: "+benchmarkNames;
     chartTitleList.push(chartTitle);
     chartTitleList.push(parameterType);
 
     let compareTargets = []
-    if(comparisonMode == "byRun"){
+    if(comparisonMode === "byRun"){
         chartTitleList.push("DeviceName");
         compareTargets = runId;
     }else{
@@ -106,7 +107,7 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
 
     // Display commit point for each run
     const commitPointDiv = groupLayout.querySelector('.commit-point-display');
-    if(comparisonMode == "byRun"){
+    if(comparisonMode === "byRun"){
         let url = new URL('/tvmvis/fetch-commit-point-by-runid/', window.location.origin);
         runId.forEach(id => url.searchParams.append('runId', id));
         fetch(url)

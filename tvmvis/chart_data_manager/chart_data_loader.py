@@ -21,6 +21,7 @@ def get_all_param_types():
     Get all numeric fields from TaskResults, TotalResults, and TaskGraphResults models.
     :return: JSON serialized list of numeric field names
     """
+
     def extract_numeric_fields(model):
         fields = model._meta.get_fields()
         return [field.name for field in fields if isinstance(field, (IntegerField, FloatField))
@@ -108,10 +109,10 @@ def get_common_benchmark_names_by_device_names(device_names):
     for device_name in device_names:
         task_results = TaskResults.objects.filter(HardwareInfo=device_name)
         task_graph_results_ids = task_results.values_list('TaskGraphResult', flat=True).distinct()
-        total_results_ids = TaskGraphResults.objects.filter(TaskGraphID__in=task_graph_results_ids)\
-                                                    .values_list('Result', flat=True).distinct()
-        benchmark_ids = TotalResults.objects.filter(ResultID__in=total_results_ids)\
-                                            .values_list('Benchmark', flat=True).distinct()
+        total_results_ids = TaskGraphResults.objects.filter(TaskGraphID__in=task_graph_results_ids) \
+            .values_list('Result', flat=True).distinct()
+        benchmark_ids = TotalResults.objects.filter(ResultID__in=total_results_ids) \
+            .values_list('Benchmark', flat=True).distinct()
         bm_names = set(Benchmark.objects.filter(BenchmarkID__in=benchmark_ids).values_list('BenchmarkName', flat=True))
         all_benchmark_names.append(bm_names)
 
@@ -119,8 +120,25 @@ def get_common_benchmark_names_by_device_names(device_names):
     return json.dumps(list(common_benchmark_names))
 
 
+def load_compared_paired_chart_data_by_benchmarks(comparison_mode, parameter_type,
+                                                  run_ids, device_names, benchmark_names,
+                                                  max_data_size=100, is_json=True):
+    data_pack = {}
+    for benchmark_name in benchmark_names:
+        data_pack[benchmark_name] = load_compared_paired_chart_data(comparison_mode, parameter_type,
+                                                                    run_ids, device_names, benchmark_name,
+                                                                    max_data_size, False)
+
+    if is_json:
+        serialized_data_pack = json.dumps(data_pack)
+        return serialized_data_pack
+    else:
+        return data_pack
+
+
 def load_compared_paired_chart_data(comparison_mode, parameter_type,
-                                    run_ids, device_names, benchmark_name, max_data_size=100):
+                                    run_ids, device_names, benchmark_name,
+                                    max_data_size=100, is_json=True):
     """
     Get chart data from the database for comparison.
     :param comparison_mode: Comparison mode ('byRun' or 'byDevice')
@@ -144,7 +162,8 @@ def load_compared_paired_chart_data(comparison_mode, parameter_type,
             # Get TotalResults
             total_results = TotalResults.objects.filter(Benchmark__in=benchmarks)
 
-            print("run_id: {}".format(run_id), "; ","benchmarks:{}".format(benchmarks), "total_results: {}".format(total_results.count()))
+            print("run_id: {}".format(run_id), "; ", "benchmarks:{}".format(benchmarks),
+                  "total_results: {}".format(total_results.count()))
 
             # Get TaskGraphResults
             task_graph_results = TaskGraphResults.objects.filter(Result__in=total_results)
@@ -196,7 +215,6 @@ def load_compared_paired_chart_data(comparison_mode, parameter_type,
             benchmarks = Benchmark.objects.filter(BenchmarkID__in=total_results.values_list('Benchmark_id', flat=True),
                                                   BenchmarkName=benchmark_name)
 
-
             # Determine which table contains the parameter_type
             if parameter_type in [field.name for field in TaskResults._meta.fields]:
                 datas = task_results.values('TaskGraphResult__Result__Benchmark__Run__RunID', parameter_type)[
@@ -226,6 +244,8 @@ def load_compared_paired_chart_data(comparison_mode, parameter_type,
                 chart_data.append([entry['TaskGraphResult__Result__Benchmark__Run__RunID'], entry[parameter_type]])
             data_pack[device_name] = chart_data
 
+    if not is_json:
+        return data_pack
     serialized_data_pack = json.dumps(data_pack)
     return serialized_data_pack
 

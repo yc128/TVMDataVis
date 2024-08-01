@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- import Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link rel="stylesheet" href="{% static 'tvmvis/index.css' %}">
+
+</head>
+<body>
+<!-- import js -->
+{#<script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>#}
+{#<script type="text/javascript" src="{% static 'tvmvis/index.js' %}"></script>#}
+<script type="text/javascript" src="{% static 'tvmvis/speedupChart.js' %}"></script>
+
+
+<div class="chart-container">
+    <div class="chart-group" id="chart-group1">
+        <!-- chart title selector -->
+        <div class="title-sel-group">
+
+            <label for="run-id-selector">RunID:</label>
+            <select class="run-id-selector"></select>
+            <br>
+            <label for="benchmark-name-selector">Benchmark Name:</label>
+            <div class="dropdown">
+                <button class="dropbtn">Select Benchmarks</button>
+                <div class="dropdown-content benchmark-name-container">
+                    <!-- Checkboxes will be dynamically added here -->
+                </div>
+            </div>
+            <button class="generate-button">Chart Generate</button>
+        </div>
+
+        <!-- chart div -->
+        <div class="commit-point-display"></div>
+        <div class="chart-div" id="tableDiv1"></div>
+    </div>
+
+    </div>
+</div>
+
+
+
+</body>
+</html>

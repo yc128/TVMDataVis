@@ -12,8 +12,8 @@
 <body>
 <!-- import js -->
 {#<script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>#}
-{#<script type="text/javascript" src="{% static 'tvmvis/index.js' %}"></script>#}
-<script type="text/javascript" src="{% static 'tvmvis/speedupChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'tvmvis/speedupChartGenerator.js' %}"></script>
+<script type="text/javascript" src="{% static 'tvmvis/speedupChartIndex.js' %}"></script>
 
 
 <div class="chart-container">
@@ -39,6 +39,7 @@
             <label for="comparison-target-selector">Device:</label>
             <select class="device-name-selector"></select>
             <button class="generate-button">Chart Generate</button>
+            <button id="download-chart-button" class="download-button">Download Chart</button>
         </div>
 
         <!-- chart div -->

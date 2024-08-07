@@ -22,7 +22,12 @@
         <div class="title-sel-group">
 
             <label for="run-id-selector">RunID:</label>
-            <select class="run-id-selector"></select>
+            <div class="dropdown">
+                <button class="dropbtn">Select RunIDs</button>
+                <div class="dropdown-content run-id-container">
+                    <!-- Checkboxes will be dynamically added here -->
+                </div>
+            </div>
             <br>
             <label for="benchmark-name-selector">Benchmark Name:</label>
             <div class="dropdown">
@@ -31,6 +36,8 @@
                     <!-- Checkboxes will be dynamically added here -->
                 </div>
             </div>
+            <label for="comparison-target-selector">Device:</label>
+            <select class="device-name-selector"></select>
             <button class="generate-button">Chart Generate</button>
         </div>
 

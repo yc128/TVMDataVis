@@ -141,3 +141,5 @@ function updateTable(selectElement, comparisonMode, parameterType, runId, device
         commitPointDiv.innerHTML = '';
     }
 }
+
+

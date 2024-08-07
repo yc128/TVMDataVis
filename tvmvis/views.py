@@ -6,6 +6,7 @@ import json
 from django.shortcuts import render
 
 from tvmvis.chart_data_manager.chart_data_loader import *
+from tvmvis.chart_data_manager.speedup_chart_data_loader import get_total_speedup_data
 
 
 # Create your views here.
@@ -95,3 +96,14 @@ def fetch_commit_points(request):
 
 def speedup_chart(request):
     return render(request, 'tvmvis/speedupChart.html')
+
+
+def fetch_speedup_chart_data(request):
+    run_ids = request.GET.getlist('runIds')
+    bm_names = request.GET.getlist('bmNames')
+    device_name = request.GET.get('deviceName')
+
+    data = get_total_speedup_data(run_ids, bm_names, device_name)
+    print(data)
+    return HttpResponse(data, content_type="application/json")
+

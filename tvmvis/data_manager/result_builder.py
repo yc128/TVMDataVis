@@ -13,8 +13,20 @@ def build_task_graph_results(bm_line, json_blocks):
     bm_info = {part.split('=')[0].strip(): part.split('=')[1].strip() for part in bm_parts}
 
     if len(json_blocks) < 2:
-        print("Unexpected, raw:", bm_line, "\n", json_blocks)
-        return None
+        print("Unexpected json block number when task_graph_result building create table using zeros. raw:", bm_line, "\n", json_blocks)
+        task_graph_results = {
+            'LastKernelTime': 0,
+            'KernelAverage': 0,
+            'Copy_IN': 0,
+            'Copy_OUT': 0,
+            'Compilation_Graal': 0,
+            'Compilation_Driver': 0,
+            'Dispatch_DataTransfers_Time': 0,
+            'Dispatch_Kernel_Time': 0
+
+        }
+
+        return task_graph_results
 
     # 从第一个JSON块提取编译指标
     first_json_block = json_blocks[0]
@@ -25,7 +37,7 @@ def build_task_graph_results(bm_line, json_blocks):
     last_json_block = json_blocks[-1]
     copy_in = int(last_json_block['benchmark'].get('COPY_IN_TIME', 0))
     copy_out = int(last_json_block['benchmark'].get('COPY_OUT_TIME', 0))
-    dispatch_DataTransfers_time = int(last_json_block['benchmark'].get('TOTAL_DISPATCH_DATA_TRANSFERS_TIME', 0))
+    dispatch_data_transfers_time = int(last_json_block['benchmark'].get('TOTAL_DISPATCH_DATA_TRANSFERS_TIME', 0))
     dispatch_kernel_time = int(last_json_block['benchmark'].get('TOTAL_DISPATCH_KERNEL_TIME', 0))
     kernel_time = int(last_json_block['benchmark'].get('TOTAL_KERNEL_TIME', 0))
 
@@ -37,7 +49,7 @@ def build_task_graph_results(bm_line, json_blocks):
         'Copy_OUT': copy_out,
         'Compilation_Graal': compilation_graal,
         'Compilation_Driver': compilation_driver,
-        'Dispatch_DataTransfers_Time': dispatch_DataTransfers_time,
+        'Dispatch_DataTransfers_Time': dispatch_data_transfers_time,
         'Dispatch_Kernel_Time': dispatch_kernel_time
 
     }
@@ -54,9 +66,9 @@ def build_total_results(bm_line, json_blocks):
         """
     bm_data = parse_bm_line(bm_line)
 
-    if len(json_blocks) < 2:
-        print("Unexpected, raw:", bm_line, "\n", json_blocks)
-        return None
+    # if len(json_blocks) < 2:
+    #     print("Unexpected, raw:", bm_line, "\n", json_blocks)
+    #     return None
 
     # 提取 bm_line 中的相关信息
     total_average_time = int(float(bm_data['average']))
@@ -109,9 +121,7 @@ def build_task_results(bm_line, json_blocks):
         """
     bm_data = parse_bm_line(bm_line)
 
-    if len(json_blocks) < 2:
-        print("Unexpected, raw:", bm_line, "\n", json_blocks)
-        return None
+
 
     # 从 bm_line 中提取相关信息
     benchmark_name = bm_data['bm']
@@ -128,6 +138,14 @@ def build_task_results(bm_line, json_blocks):
     software_info = None
 
     task_results = []
+
+    if len(json_blocks) < 2:
+        print("Incorrect json_block count, save hardwareInfo only. raw:", bm_line, "\n", json_blocks)
+        task_result = {'HardwareInfo': hardware_info, 'SoftwareInfo': "", 'KernelTime': 0, 'CodeGenerationTime': 0,
+                       'DriverCompilationTime': 0}
+        task_results.append(task_result)
+
+        return task_results
 
     for i, json_block in enumerate(json_blocks):
         task_result = {}

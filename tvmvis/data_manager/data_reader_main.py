@@ -93,8 +93,8 @@ def build_tables(args):
         bm_line = data['line']
         json_blocks = data['json_blocks']
 
-        if len(json_blocks) < 3:
-            continue
+        # if len(json_blocks) < 3:
+        #     continue
 
         # TotalResult table build
         # Look up Benchmark from dict to be the FK

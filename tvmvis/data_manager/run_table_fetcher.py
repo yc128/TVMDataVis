@@ -25,7 +25,7 @@ def build_run_table(description="Automated Jenkins pipeline"):
 
     # Default CommitPoint for testing
     # TODO Remove this after testing
-    run["CommitPoint"] = "606fc08"
+    run["CommitPoint"] = "No CommitPoint info"
     for line in lines_tver:
         if "version" in line:
             line_arr = line.split('=')

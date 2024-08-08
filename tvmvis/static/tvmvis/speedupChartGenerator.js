@@ -15,7 +15,22 @@ function updateSpeedupTable(selectElement, runIds, deviceName, benchmarkNames) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            drawChart(data, tableDiv)
+                // Fetch commit point by runid
+                let url = new URL('/tvmvis/fetch-commit-point-by-runid/', window.location.origin);
+                runIds.forEach(id => url.searchParams.append('runId', id));
+                fetch(url)
+                    .then(response => response.json())
+                    .then(commitPointData => {
+
+                        // Convert into RunID-CommitPoint dict
+                        let commitPointDict = {}
+                        commitPointData.forEach(singleData=>{
+                            commitPointDict[singleData["RunID"]] = singleData["CommitPoint"];
+                        })
+                        drawChart(data, tableDiv, deviceName, commitPointDict)
+                    })
+
+
         })
 
 
@@ -27,8 +42,10 @@ function updateSpeedupTable(selectElement, runIds, deviceName, benchmarkNames) {
  * Convert the fetched data to Google Charts format and draw the chart
  * @param {Object} data - The data fetched from the server
  * @param {Element} chartDiv - The div element to draw the chart in
+ * @param {String} deviceName - device name
+ * @param commitPoint - dict of runId-commitPoint
  */
-function drawChart(data, chartDiv) {
+function drawChart(data, chartDiv, deviceName, commitPoint) {
     // Extract runIds dynamically from data
     const runIds = new Set();
     for (const benchmark in data) {
@@ -37,7 +54,6 @@ function drawChart(data, chartDiv) {
         }
     }
 
-    console.log(runIds)
 
     // Convert runIds to a sorted array
     const sortedRunIds = Array.from(runIds).sort((a, b) => a - b);
@@ -54,9 +70,14 @@ function drawChart(data, chartDiv) {
         return aBase.localeCompare(bBase);
     });
 
+
+
+
     // Prepare chartData array for Google Charts
+    console.log(commitPoint)
+    console.log(commitPoint[sortedRunIds[0]])
     const chartData = [
-        ["Benchmark", ...sortedRunIds.flatMap(runId => [`Run${runId}`, { role: 'annotation' }])]
+        ["Benchmark", ...sortedRunIds.flatMap(runId => [`Run${runId} - CommitPoint:${commitPoint[runId]}`, { role: 'annotation' }])]
     ];
 
     sortedBenchmarks.forEach(benchmark => {
@@ -74,7 +95,7 @@ function drawChart(data, chartDiv) {
         const dataTable = google.visualization.arrayToDataTable(chartData);
 
         const options = {
-            title: 'Benchmark Speedup',
+            title: 'Benchmark Speedup; '+deviceName,
             hAxis: { title: 'Benchmark' },
             vAxis: { title: 'Speedup' },
             legend: { position: 'top', maxLines: 3 },

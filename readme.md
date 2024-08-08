@@ -30,3 +30,9 @@
       2. `--jvm`: String for jvm flag: Pass options to the JVM e.g. -J="-Ds0.t0.device=0:1"
    2. Wait for the script to complete and look for the output message: `Data reading complete`.
 
+
+### Clean Database
+
+
+1. Activate venv.
+2. run command `python manage.py cleandatabase`

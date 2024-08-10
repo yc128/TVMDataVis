@@ -6,12 +6,15 @@
     <title>Title</title>
     <!-- import Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <link rel="stylesheet" href="{% static 'tvmvis/index.css' %}">
 
 </head>
 <body>
 <!-- import js -->
 {#<script type="text/javascript" src="{% static 'tvmvis/chart.js' %}"></script>#}
+
 <script type="text/javascript" src="{% static 'tvmvis/speedupChartGenerator.js' %}"></script>
 <script type="text/javascript" src="{% static 'tvmvis/speedupChartIndex.js' %}"></script>
 
@@ -40,6 +43,9 @@
             <select class="device-name-selector"></select>
             <button class="generate-button">Chart Generate</button>
             <button id="download-chart-button" class="download-button">Download Chart</button>
+            <label>
+                <input type="checkbox" id="grayscale-checkbox" class="grayscale-checkbox"> Grayscale
+            </label>
         </div>
 
         <!-- chart div -->

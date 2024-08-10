@@ -7,7 +7,7 @@
    cd TVMDataVis
 
 2. **Set Environment**:
-   1. Create virtual environment `python -m venv venv`
+   1. Create virtual environment `python -m venv venv` in project root directory
    2. Activate environment:
       1. macOS and Linux: `source venv/bin/activate`
       2. Windows: `venv\Scripts\activate`
@@ -34,5 +34,11 @@
 ### Clean Database
 
 
-1. Activate venv.
-2. run command `python manage.py cleandatabase`
+1. Activate venv in project root directory
+2. Run command `python manage.py cleandatabase`
+
+
+### Run WebUI Server
+1. Activate venv in project root directory
+2. Run command `python manage.py runserver`
+3. Open http://localhost:8000/tvmvis/speedup-chart in browser

@@ -1,9 +1,41 @@
+let uri = "";
+let imgWidth = 225;
+let imgHeight = 60;
+
+// Add event listener to download button
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('download-chart-button').addEventListener('click', () => {
+        console.log("uri", uri);
+        if(uri !== ""){
+            // Save as png
+            let link = document.createElement('a');
+            link.href = uri;
+            link.download = 'chart.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Save as pdf
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            console.log(imgHeight+"; "+ imgWidth)
+
+            // 添加图像到 PDF
+            pdf.addImage(uri, 'PNG', 10, 10, imgWidth, imgHeight);
+
+            // 下载 PDF
+            pdf.save('chart.pdf');
+        }
+
+    });
+})
+
 
 function updateSpeedupTable(selectElement, runIds, deviceName, benchmarkNames) {
 
     //Use Selector to find its table div
     const groupLayout = selectElement.closest('.chart-group');
-    const tableDiv = groupLayout.querySelector('.chart-div');
 
     //Add param to url
     const url = new URL('/tvmvis/fetch-speedup-chart-data/', window.location.origin);
@@ -27,7 +59,7 @@ function updateSpeedupTable(selectElement, runIds, deviceName, benchmarkNames) {
                         commitPointData.forEach(singleData=>{
                             commitPointDict[singleData["RunID"]] = singleData["CommitPoint"];
                         })
-                        drawChart(data, tableDiv, deviceName, commitPointDict)
+                        drawChart(data, groupLayout, deviceName, commitPointDict)
                     })
 
 
@@ -41,11 +73,14 @@ function updateSpeedupTable(selectElement, runIds, deviceName, benchmarkNames) {
 /**
  * Convert the fetched data to Google Charts format and draw the chart
  * @param {Object} data - The data fetched from the server
- * @param {Element} chartDiv - The div element to draw the chart in
+ * @param {Element} groupLayout - The div element of the group
  * @param {String} deviceName - device name
  * @param commitPoint - dict of runId-commitPoint
  */
-function drawChart(data, chartDiv, deviceName, commitPoint) {
+function drawChart(data, groupLayout, deviceName, commitPoint) {
+    const chartDiv = groupLayout.querySelector('.chart-div');
+    const isGrayscale = groupLayout.querySelector('.grayscale-checkbox').checked;
+
     // Extract runIds dynamically from data
     const runIds = new Set();
     for (const benchmark in data) {
@@ -57,6 +92,16 @@ function drawChart(data, chartDiv, deviceName, commitPoint) {
 
     // Convert runIds to a sorted array
     const sortedRunIds = Array.from(runIds).sort((a, b) => a - b);
+
+    // Dynamically generate grayscale array
+    const generateGrayscaleColors = (count) => {
+        let colors = [];
+        for (let i = 0; i < count; i++) {
+            let shade = Math.floor((i / count) * 255);
+            colors.push(`rgb(${shade},${shade},${shade})`);
+        }
+        return colors;
+    };
 
     // Extract benchmark names and sort them
     const sortedBenchmarks = Object.keys(data).sort((a, b) => {
@@ -109,22 +154,16 @@ function drawChart(data, chartDiv, deviceName, commitPoint) {
                     color: '#555'
                 }
             },
-            tooltip: { isHtml: true }
+            tooltip: { isHtml: true },
+            colors: isGrayscale ? generateGrayscaleColors(sortedRunIds.length) : undefined
         };
 
         const chart = new google.visualization.ColumnChart(chartDiv);
         chart.draw(dataTable, options);
+        uri = chart.getImageURI();
 
 
-        // Add event listener to download button
-        document.getElementById('download-chart-button').addEventListener('click', () => {
-            const uri = chart.getImageURI();
-            const link = document.createElement('a');
-            link.href = uri;
-            link.download = 'chart.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
+
+
     });
 }

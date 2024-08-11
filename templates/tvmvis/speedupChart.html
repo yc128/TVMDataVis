@@ -31,6 +31,7 @@
                     <!-- Checkboxes will be dynamically added here -->
                 </div>
             </div>
+            
             <br>
             <label for="benchmark-name-selector">Benchmark Name:</label>
             <div class="dropdown">
@@ -39,13 +40,26 @@
                     <!-- Checkboxes will be dynamically added here -->
                 </div>
             </div>
-            <label for="comparison-target-selector">Device:</label>
-            <select class="device-name-selector"></select>
-            <button class="generate-button">Chart Generate</button>
-            <button id="download-chart-button" class="download-button">Download Chart</button>
-            <label>
-                <input type="checkbox" id="grayscale-checkbox" class="grayscale-checkbox"> Grayscale
-            </label>
+            
+            <div>
+                <label for="comparison-target-selector">Device:</label>
+                <select class="device-name-selector"></select>
+            </div>
+            
+{#            <div>#}
+{#                <input type="checkbox" id="baseline-checkbox" class="baseline-checkbox"> Enable Baseline RunID#}
+{#                <label for="baseline-run-id-selector">Baseline RunID:</label>#}
+{#                <select class="baseline-run-id-selector"></select>#}
+{#            </div>#}
+            
+            <div>
+                <button class="generate-button">Chart Generate</button>
+                <button id="download-chart-button" class="download-button">Download Chart</button>
+                <label>
+                    <input type="checkbox" id="grayscale-checkbox" class="grayscale-checkbox"> Grayscale
+                </label>
+            </div>
+            
         </div>
 
         <!-- chart div -->

@@ -39,7 +39,7 @@ def key_value_extractor(text_line):
     match = re.search(r'([^\s].*?)\s{5,}(.*)', text_line)
 
     if match:
-        key, value = match.groups()  # 获取匹配的第一部分（例如 "Max size"）
+        key, value = match.groups()
         # print("Key:", key)
         # print("Value:", value)
         return key, value

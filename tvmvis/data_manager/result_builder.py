@@ -8,12 +8,12 @@ def build_task_graph_results(bm_line, json_blocks):
     :param json_blocks: json_block array
     :return: Dict of task_graph_results
     """
-    # 从benchmark_line解析必要的信息
+    # Parse info from benchmark_line
     bm_parts = bm_line.split(',')
     bm_info = {part.split('=')[0].strip(): part.split('=')[1].strip() for part in bm_parts}
 
+    # If there is not enough json_block then set all to zero
     if len(json_blocks) < 2:
-        print("Unexpected json block number when task_graph_result building create table using zeros. raw:", bm_line, "\n", json_blocks)
         task_graph_results = {
             'LastKernelTime': 0,
             'KernelAverage': 0,
@@ -28,12 +28,12 @@ def build_task_graph_results(bm_line, json_blocks):
 
         return task_graph_results
 
-    # 从第一个JSON块提取编译指标
+    # Get compile data from first JSON block
     first_json_block = json_blocks[0]
     compilation_graal = int(first_json_block['benchmark']['TOTAL_GRAAL_COMPILE_TIME'])
     compilation_driver = int(first_json_block['benchmark']['TOTAL_DRIVER_COMPILE_TIME'])
 
-    # 从最后一个JSON块提取数据传输和调度指标
+    # Get data from last JSON block
     last_json_block = json_blocks[-1]
     copy_in = int(last_json_block['benchmark'].get('COPY_IN_TIME', 0))
     copy_out = int(last_json_block['benchmark'].get('COPY_OUT_TIME', 0))
@@ -41,10 +41,10 @@ def build_task_graph_results(bm_line, json_blocks):
     dispatch_kernel_time = int(last_json_block['benchmark'].get('TOTAL_DISPATCH_KERNEL_TIME', 0))
     kernel_time = int(last_json_block['benchmark'].get('TOTAL_KERNEL_TIME', 0))
 
-    # 构建TaskGraphResults字典
+    # Build TaskGraphResults Dict
     task_graph_results = {
         'LastKernelTime': kernel_time,
-        'KernelAverage': kernel_time,  # 假设使用最后一个迭代的内核时间作为平均值
+        'KernelAverage': kernel_time,  # Assume last kernel time as avg
         'Copy_IN': copy_in,
         'Copy_OUT': copy_out,
         'Compilation_Graal': compilation_graal,
@@ -70,13 +70,13 @@ def build_total_results(bm_line, json_blocks):
     #     print("Unexpected, raw:", bm_line, "\n", json_blocks)
     #     return None
 
-    # 提取 bm_line 中的相关信息
+    # Extract info from bm_line
     total_average_time = int(float(bm_data['average']))
     total_median_time = int(float(bm_data['median']))
     total_first_iteration = int(float(bm_data['firstIteration']))
     total_best = int(float(bm_data['best']))
 
-    # 从 json_blocks 中提取最小时间（假设从两个迭代中获取最小值）
+    # Extract minimum time from json_blocks
     iteration_times = []
     for block in json_blocks:
         benchmark_info = {}
@@ -92,7 +92,7 @@ def build_total_results(bm_line, json_blocks):
     else:
         total_minimum = 0
 
-    # 从 bm_line 中提取 speedup 信息（假设平均加速比）
+    # Extract speedup info from bm_line (Assume using speedupAvg)
     # Java_reference have no speedup info
     if 'speedupAvg' in bm_data:
         total_speedup = float(bm_data['speedupAvg'])
@@ -123,7 +123,7 @@ def build_task_results(bm_line, json_blocks):
 
 
 
-    # 从 bm_line 中提取相关信息
+    # Extract info from bm_line
     benchmark_name = bm_data['bm']
 
     # Temporary use device name in profiler for hardware_info
@@ -150,23 +150,23 @@ def build_task_results(bm_line, json_blocks):
     for i, json_block in enumerate(json_blocks):
         task_result = {}
 
-        # 解析 JSON block
+        # Parse JSON block
         benchmark_details = json_block.get("benchmark", {})
         benchmark_specifics = benchmark_details.get(f"benchmark.{benchmark_name.split('-')[0]}", {})
 
-        # 填充 TaskResult 字典
+        # Fill TaskResult Dict
         # task_result['HardwareInfo'] = benchmark_specifics.get("DEVICE", hardware_info)
         task_result['HardwareInfo'] = hardware_info
         task_result['SoftwareInfo'] = benchmark_specifics.get("BACKEND", software_info)
 
-        # 根据 JSON block 填充不同的时间信息
+        # Fill different info according to different JSON block
         if i == 0:
-            # 第一个 JSON block，包含编译信息
+            # First JSON block, including compiling info
             task_result['KernelTime'] = 0
             task_result['CodeGenerationTime'] = int(benchmark_details.get("TOTAL_CODE_GENERATION_TIME", 0))
             task_result['DriverCompilationTime'] = int(benchmark_details.get("TOTAL_DRIVER_COMPILE_TIME", 0))
         else:
-            # 第二和第三个 JSON block，包含执行迭代信息
+            # Second and Third JSON block, Including compile info
             task_result['KernelTime'] = int(benchmark_details.get("TOTAL_KERNEL_TIME", 0))
             task_result['CodeGenerationTime'] = 0
             task_result['DriverCompilationTime'] = 0
@@ -175,26 +175,3 @@ def build_task_results(bm_line, json_blocks):
 
     return task_results
 
-# ===============================使用示例===============================
-# file_path = 'sample_output/tornado_benchmarks_medium_profiler_2_iterations.txt'
-# bm_list = parse_benchmark_file(file_path)
-#
-# benchmark_line = bm_list[101]['line']
-# json_blocks = bm_list[101]['json_blocks']
-# task_graph_results = build_task_graph_results(benchmark_line, json_blocks)
-# total_results = build_total_results(benchmark_line, json_blocks)
-# task_results = build_task_results(benchmark_line, json_blocks)
-
-# # 输出结果
-# import pprint
-#
-# print("Raw:")
-# print(benchmark_line)
-# print(json_blocks)
-#
-# print("Task_Graph_Results:")
-# pprint.pprint(task_graph_results)
-# print("\n", "Total_Results:")
-# pprint.pprint(total_results)
-# print("\n", "Task_Results:")
-# pprint.pprint(task_results)

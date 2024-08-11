@@ -1,4 +1,8 @@
-### Installation
+## Documentation
+- [User Guide](./README.md)
+- [Developer Guide](./docs/DEVELOPER.md)
+
+## Installation
 
 1. **Clone the repository**:
 
@@ -16,7 +20,29 @@
 3. **Apply database migrations**:
    1. Run `python manage.py migrate` to configure the database 
 
-### Data Manager
+## Data Manager
+
+### Profiler Format Requirements
+* Each dataset begins with a line starting with `bm=<benchmark_name>`, followed by benchmark-specific details like id, average, median, etc.
+* The line is followed by one or more JSON blocks that contain detailed metrics. These JSON blocks provide information about the benchmark, such as compile times, kernel execution times, device information, and other relevant metrics.
+* The profiler output typically follows this format when generated using the command:
+`tornado-benchmarks.py --<benchmark_size> --profiler console --iterations 2`. This command will output the profiler data, the console_output is in the required format, which can be directed to a file.
+
+**Example**
+```
+bm=montecarlo-2-512, id=java-reference, average=6.861045e+07, median=6.861045e+07, firstIteration=7.122675e+07, best=6.599415e+07
+{
+    "benchmark": {
+        "TOTAL_GRAAL_COMPILE_TIME": "51106745",
+        "TOTAL_BYTE_CODE_GENERATION": "3705366",
+        "TOTAL_DRIVER_COMPILE_TIME": "12848027",
+        ...
+    }
+}
+
+```
+
+### Read Profiler using Data_Reader
 
 1. **Set Directories**:
    1. Open the file `/TVMDataVis/settings.py`
@@ -31,14 +57,14 @@
    2. Wait for the script to complete and look for the output message: `Data reading complete`.
 
 
-### Clean Database
+## Clean Database
 
 
 1. Activate venv in project root directory
 2. Run command `python manage.py cleandatabase`
 
 
-### Run WebUI Server
+## Run WebUI Server
 1. Activate venv in project root directory
 2. Run command `python manage.py runserver`
 3. Open http://localhost:8000/tvmvis/speedup-chart in browser

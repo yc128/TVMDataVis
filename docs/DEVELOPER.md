@@ -56,6 +56,30 @@ Contains scripts for managing and processing benchmark data.
 - **`version_fetcher.py`**: Retrieves version information for various software components.
 
 
+### Goals and Future Development
+
+#### 1. **Data Reader Enhancements**
+   - **Objective**: Ensure robust and accurate data extraction in the `data_reader`.
+   - **Action Items**:
+     - **Testing and Debugging**: Thoroughly test and modify the code in `run_table_fetcher` to ensure that it correctly reads the output from the `tornado --version` command and store version and commit point into Run table correctly.
+
+#### 2. **Baseline Functionality**
+   - **Objective**: Introduce a baseline comparison feature to enhance the analytical capabilities of the tool.
+   - **Action Items**:
+     - **Baseline Selection**: Allow users to select a specific run or device as a baseline for comparison.
+     - **Speedup Calculation**: Implement functionality to calculate and visualize the speedup of other runs or devices relative to the selected baseline.
+
+#### 3. **User Options and Chart Customization**
+   - **Objective**: Expand the customization options available to users for generating and viewing charts.
+   - **Action Items**:
+     - **Additional User Options**: Provide more flexibility by adding options such as advanced filtering.
+     - **Chart Types**: Introduce new chart formats and visualizations to accommodate different types of data analysis.
+     - **Improved User Interface**: Continuously refine the user interface to make these new options intuitive and accessible.
+
+By focusing on these goals, the project aims to provide more powerful tools for data analysis and visualization, ensuring that users can gain deeper insights into the performance metrics of their benchmarks. These enhancements will also make the tool more versatile and user-friendly, catering to a broader range of analytical needs.
+
+
+
 ### `/docs` Directory
 Documentation for the project.
 - **`DEVELOPER.md`**: Developer guide (this document).

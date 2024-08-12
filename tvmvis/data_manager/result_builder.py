@@ -99,7 +99,7 @@ def build_total_results(bm_line, json_blocks):
     else:
         total_speedup = 0
 
-    # 构建 TotalResults 字典
+    # Build TotalResults dict
     total_results = {
         'TotalAverageTime': total_average_time,
         'TotalMedianTime': total_median_time,

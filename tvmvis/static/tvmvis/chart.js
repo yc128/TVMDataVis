@@ -10,10 +10,10 @@ var chartOption = {
     },
     hAxis: {
         textStyle: {
-            fontSize: 7, // 字体大小
+            fontSize: 7,
         },
-        slantedText: true, // 倾斜文本
-        slantedTextAngle: 75 // 倾斜角度
+        slantedText: true,
+        slantedTextAngle: 75
     },
 }
 

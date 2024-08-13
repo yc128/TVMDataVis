@@ -121,8 +121,6 @@ def build_task_results(bm_line, json_blocks):
         """
     bm_data = parse_bm_line(bm_line)
 
-
-
     # Extract info from bm_line
     benchmark_name = bm_data['bm']
 
@@ -133,14 +131,15 @@ def build_task_results(bm_line, json_blocks):
     elif 'id' in bm_data:
         hardware_info = bm_data['id']
     else:
-        print("cannot find device name: ", bm_data)
+        print("[Task Results Builder] cannot find device name: ", bm_data)
     # print(hardware_info)
     software_info = None
 
     task_results = []
 
     if len(json_blocks) < 2:
-        print("Incorrect json_block count, save hardwareInfo only. raw:", bm_line, "\n", json_blocks)
+        print("[Task Results Builder] Incorrect json_block count, save hardwareInfo only. raw:", bm_line, "\n",
+              json_blocks)
         task_result = {'HardwareInfo': hardware_info, 'SoftwareInfo': "", 'KernelTime': 0, 'CodeGenerationTime': 0,
                        'DriverCompilationTime': 0}
         task_results.append(task_result)
@@ -174,4 +173,3 @@ def build_task_results(bm_line, json_blocks):
         task_results.append(task_result)
 
     return task_results
-
